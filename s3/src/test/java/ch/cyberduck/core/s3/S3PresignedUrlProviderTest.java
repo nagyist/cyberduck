@@ -63,7 +63,7 @@ public class S3PresignedUrlProviderTest extends AbstractS3Test {
         final Calendar expiry = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         expiry.add(Calendar.MILLISECOND, (int) TimeUnit.DAYS.toMillis(7));
         final String url = new S3PresignedUrlProvider(virtualhost).create(System.getProperties().getProperty("s3.secret"),
-            "", "eu-central-1", "f", "GET", expiry.getTimeInMillis());
+                "", "eu-west-3", "f", "GET", expiry.getTimeInMillis());
         assertNotNull(url);
         assertEquals("test-eu-west-3-cyberduck.s3.amazonaws.com", URI.create(url).getHost());
         assertTrue(url, url.startsWith("https://test-eu-west-3-cyberduck.s3.amazonaws.com/f"));
