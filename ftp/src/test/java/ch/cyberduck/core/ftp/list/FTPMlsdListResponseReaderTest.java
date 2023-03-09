@@ -302,4 +302,15 @@ public class FTPMlsdListResponseReaderTest {
             .read(directory, Arrays.asList(replies), new DisabledListProgressListener());
         assertEquals(2, children.size());
     }
+
+    @Test
+    public void test14333() throws Exception {
+        Path path = new Path("/TEST", EnumSet.of(Path.Type.directory));
+        String[] replies = new String[]{
+                " /TEST"
+        };
+        final AttributedList<Path> children = new FTPMlsdListResponseReader()
+                .read(path, Arrays.asList(replies), new DisabledListProgressListener());
+        assertTrue(children.isEmpty());
+    }
 }
