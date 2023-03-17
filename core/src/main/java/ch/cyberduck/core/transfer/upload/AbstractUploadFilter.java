@@ -38,7 +38,9 @@ import ch.cyberduck.core.exception.LocalNotfoundException;
 import ch.cyberduck.core.exception.NotfoundException;
 import ch.cyberduck.core.features.AclPermission;
 import ch.cyberduck.core.features.AttributesFinder;
+import ch.cyberduck.core.features.Copy;
 import ch.cyberduck.core.features.Delete;
+import ch.cyberduck.core.features.Directory;
 import ch.cyberduck.core.features.Encryption;
 import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.features.Headers;
@@ -48,8 +50,10 @@ import ch.cyberduck.core.features.Timestamp;
 import ch.cyberduck.core.features.UnixPermission;
 import ch.cyberduck.core.features.Write;
 import ch.cyberduck.core.io.ChecksumCompute;
+import ch.cyberduck.core.io.DisabledStreamListener;
 import ch.cyberduck.core.preferences.Preferences;
 import ch.cyberduck.core.preferences.PreferencesFactory;
+import ch.cyberduck.core.shared.DefaultVersioningFeature;
 import ch.cyberduck.core.transfer.TransferPathFilter;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.transfer.symlink.SymlinkResolver;
@@ -65,7 +69,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
     private static final Logger log = LogManager.getLogger(AbstractUploadFilter.class);
 
     private final Preferences preferences
-        = PreferencesFactory.get();
+            = PreferencesFactory.get();
 
     private final Session<?> session;
     private final SymlinkResolver<Local> symlinkResolver;
@@ -157,8 +161,8 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             if(options.temporary) {
                 final Move feature = session.getFeature(Move.class);
                 final Path renamed = new Path(file.getParent(),
-                    MessageFormat.format(preferences.getProperty("queue.upload.file.temporary.format"),
-                        file.getName(), new AlphanumericRandomStringService().random()), file.getType());
+                        MessageFormat.format(preferences.getProperty("queue.upload.file.temporary.format"),
+                                file.getName(), new AlphanumericRandomStringService().random()), file.getType());
                 if(feature.isSupported(file, renamed)) {
                     if(log.isDebugEnabled()) {
                         log.debug(String.format("Set temporary filename %s", renamed));
@@ -171,6 +175,24 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
                 }
                 else {
                     log.warn(String.format("Cannot use temporary filename for upload with missing rename support for %s", file));
+                }
+            }
+            if(options.versioning) {
+                final Path version = DefaultVersioningFeature.getVersionedFile(file);
+                if(session.getFeature(Copy.class).isSupported(file, version)) {
+                    final Path versions = DefaultVersioningFeature.getVersionedFolder(file);
+                    if(!find.find(versions)) {
+                        if(log.isDebugEnabled()) {
+                            log.debug(String.format("Create directory %s for versions", versions));
+                        }
+                        session.getFeature(Directory.class).mkdir(versions, new TransferStatus());
+                    }
+                    if(log.isDebugEnabled()) {
+                        log.debug(String.format("Add new version %s", version));
+                    }
+                    status.withRename(version).withDisplayname(file);
+                    // Remember status of target file for later copy
+                    status.getDisplayname().exists(status.isExists());
                 }
             }
             status.withMime(new MappingMimeTypeService().getMime(file.getName()));
@@ -199,7 +221,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             if(feature != null) {
                 if(status.isExists()) {
                     progress.message(MessageFormat.format(LocaleFactory.localizedString("Getting permission of {0}", "Status"),
-                        file.getName()));
+                            file.getName()));
                     try {
                         status.setAcl(feature.getPermission(file));
                     }
@@ -233,7 +255,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             if(feature != null) {
                 if(status.isExists()) {
                     progress.message(MessageFormat.format(LocaleFactory.localizedString("Reading metadata of {0}", "Status"),
-                        file.getName()));
+                            file.getName()));
                     try {
                         status.setMetadata(feature.getMetadata(file));
                     }
@@ -251,7 +273,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             if(feature != null) {
                 if(status.isExists()) {
                     progress.message(MessageFormat.format(LocaleFactory.localizedString("Reading metadata of {0}", "Status"),
-                        file.getName()));
+                            file.getName()));
                     try {
                         status.setEncryption(feature.getEncryption(file));
                     }
@@ -270,7 +292,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
                 if(feature != null) {
                     if(status.isExists()) {
                         progress.message(MessageFormat.format(LocaleFactory.localizedString("Reading metadata of {0}", "Status"),
-                            file.getName()));
+                                file.getName()));
                         try {
                             status.setStorageClass(feature.getClass(file));
                         }
@@ -289,7 +311,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
                 final ChecksumCompute feature = session.getFeature(Write.class).checksum(file, status);
                 if(feature != null) {
                     progress.message(MessageFormat.format(LocaleFactory.localizedString("Calculate checksum for {0}", "Status"),
-                        file.getName()));
+                            file.getName()));
                     try {
                         status.setChecksum(feature.compute(local.getInputStream(), status));
                     }
@@ -311,8 +333,24 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             if(log.isDebugEnabled()) {
                 log.debug(String.format("Clear exist flag for file %s", local));
             }
-            // Reset exist flag after subclass hae applied strategy
+            // Reset exist flag after subclass has applied strategy
             status.setExists(false);
+        }
+        if(status.isExists()) {
+            if(options.versioning) {
+                final Path version = DefaultVersioningFeature.getVersionedFile(file);
+                if(!session.getFeature(Copy.class).isSupported(file, version)) {
+                    if(log.isDebugEnabled()) {
+                        log.debug(String.format("Rename existing file %s to %s", file, version));
+                    }
+                    session.getFeature(Move.class).move(file, version,
+                            new TransferStatus().exists(false), new Delete.DisabledCallback(), new DisabledConnectionCallback());
+                    if(log.isDebugEnabled()) {
+                        log.debug(String.format("Clear exist flag for file %s", file));
+                    }
+                    status.exists(false).getDisplayname().exists(false);
+                }
+            }
         }
     }
 
@@ -342,7 +380,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
                 if(feature != null) {
                     try {
                         listener.message(MessageFormat.format(LocaleFactory.localizedString("Changing permission of {0} to {1}", "Status"),
-                            file.getName(), status.getAcl()));
+                                file.getName(), status.getAcl()));
                         feature.setPermission(file, status.getAcl());
                     }
                     catch(BackgroundException e) {
@@ -357,7 +395,7 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
                     if(feature != null) {
                         try {
                             listener.message(MessageFormat.format(LocaleFactory.localizedString("Changing timestamp of {0} to {1}", "Status"),
-                                file.getName(), UserDateFormatterFactory.get().getShortFormat(status.getTimestamp())));
+                                    file.getName(), UserDateFormatterFactory.get().getShortFormat(status.getTimestamp())));
                             feature.setTimestamp(file, status);
                         }
                         catch(BackgroundException e) {
@@ -369,12 +407,22 @@ public abstract class AbstractUploadFilter implements TransferPathFilter {
             }
             if(file.isFile()) {
                 if(status.getDisplayname().remote != null) {
-                    final Move move = session.getFeature(Move.class);
-                    if(log.isInfoEnabled()) {
-                        log.info(String.format("Rename file %s to %s", file, status.getDisplayname().remote));
+                    if(options.versioning) {
+                        final Copy feature = session.getFeature(Copy.class);
+                        if(log.isInfoEnabled()) {
+                            log.info(String.format("Copy file %s to %s", file, status.getDisplayname().remote));
+                        }
+                        feature.copy(file, status.getDisplayname().remote, new TransferStatus(status).exists(status.getDisplayname().exists),
+                                new DisabledConnectionCallback(), new DisabledStreamListener());
                     }
-                    move.move(file, status.getDisplayname().remote, new TransferStatus(status).exists(status.getDisplayname().exists),
-                            new Delete.DisabledCallback(), new DisabledConnectionCallback());
+                    else {
+                        final Move feature = session.getFeature(Move.class);
+                        if(log.isInfoEnabled()) {
+                            log.info(String.format("Rename file %s to %s", file, status.getDisplayname().remote));
+                        }
+                        feature.move(file, status.getDisplayname().remote, new TransferStatus(status).exists(status.getDisplayname().exists),
+                                new Delete.DisabledCallback(), new DisabledConnectionCallback());
+                    }
                 }
             }
         }
