@@ -26,6 +26,8 @@ public class RFC3339DateFormatterTest {
     @Test
     public void testParseWithoutMilliseconds() throws Exception {
         assertEquals(1667567722000L, new RFC3339DateFormatter().parse("2022-11-04T13:15:22Z").getTime(), 0L);
+        assertEquals(1667567722000L, new RFC3339DateFormatter().parse("20221104T131522Z").getTime(), 0L);
+        assertEquals(1679159330000L, new RFC3339DateFormatter().parse("20230318T180941.516+0100").getTime(), 0L);
     }
 
     @Test
