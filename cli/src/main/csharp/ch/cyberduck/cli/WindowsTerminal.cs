@@ -17,6 +17,7 @@
 // 
 
 using ch.cyberduck.cli;
+using Ch.Cyberduck.Core;
 using org.apache.commons.cli;
 using Console = System.Console;
 
@@ -34,6 +35,10 @@ namespace Ch.Cyberduck.Cli
             // set UTF-8 encoding, tested in mintty (cygwin, babun) and cmd.exe
             java.lang.System.setProperty("file.encoding", "UTF-8");
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            // DataFolder is initialized in ModuleInitializer
+            // Thus overwrite DataFolder from "duck" to "Cyberduck".
+            RuntimeInfo.DataFolderName = "Cyberduck";
 
             var preferences = new WindowsTerminalPreferences();
             open(args, preferences); // This exits the application, nothing beyond will run.
