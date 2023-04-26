@@ -60,9 +60,11 @@ namespace Ch.Cyberduck.Core
                 Location = Path.GetDirectoryName(coreAssembly.Location);
             }
 
-            var entryName = entryAssembly.GetName();
-            ProductName = entryName.Name;
-            Version = entryName.Version;
+            if (entryAssembly?.GetName() is AssemblyName entryName)
+            {
+                ProductName = entryName.Name;
+                Version = entryName.Version;
+            }
 
             CompanyName = entryAssembly.GetCustomAttribute<AssemblyCompanyAttribute>() switch
             {
