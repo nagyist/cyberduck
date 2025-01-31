@@ -126,6 +126,8 @@ import ch.cyberduck.ui.cocoa.toolbar.BrowserToolbarFactory;
 import ch.cyberduck.ui.cocoa.toolbar.BrowserToolbarValidator;
 import ch.cyberduck.ui.cocoa.view.BookmarkCell;
 import ch.cyberduck.ui.cocoa.view.OutlineCell;
+import ch.cyberduck.ui.pasteboard.PasteboardService;
+import ch.cyberduck.ui.pasteboard.PasteboardServiceFactory;
 import ch.cyberduck.ui.quicklook.QuickLook;
 import ch.cyberduck.ui.quicklook.QuickLookFactory;
 
@@ -2609,11 +2611,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
                                         public void callback(final int returncode) {
                                             switch(returncode) {
                                                 case SheetCallback.CANCEL_OPTION:
-                                                    final NSPasteboard pboard = NSPasteboard.generalPasteboard();
-                                                    pboard.declareTypes(NSArray.arrayWithObject(NSString.stringWithString(NSPasteboard.StringPboardType)), null);
-                                                    if(!pboard.setStringForType(url.getUrl(), NSPasteboard.StringPboardType)) {
-                                                        log.error("Error writing URL to {}", NSPasteboard.StringPboardType);
-                                                    }
+                                                    PasteboardServiceFactory.get().add(PasteboardService.Type.url, url.getUrl());
                                             }
                                         }
 
@@ -2655,11 +2653,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
                                         public void callback(final int returncode) {
                                             switch(returncode) {
                                                 case SheetCallback.CANCEL_OPTION:
-                                                    final NSPasteboard pboard = NSPasteboard.generalPasteboard();
-                                                    pboard.declareTypes(NSArray.arrayWithObject(NSString.stringWithString(NSPasteboard.StringPboardType)), null);
-                                                    if(!pboard.setStringForType(url.getUrl(), NSPasteboard.StringPboardType)) {
-                                                        log.error("Error writing URL to {}", NSPasteboard.StringPboardType);
-                                                    }
+                                                    PasteboardServiceFactory.get().add(PasteboardService.Type.url, url.getUrl());
                                             }
                                         }
 
@@ -3489,7 +3483,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
                                 final NSArray elements = Rococoa.cast(o, NSArray.class);
                                 if(elements.count().intValue() == 1) {
                                     item.setTitle(MessageFormat.format(LocaleFactory.localizedString(title),
-                                            "\"" + elements.objectAtIndex(new NSUInteger(0)) + "\"").trim());
+                                            String.format("\"%s\"", elements.objectAtIndex(new NSUInteger(0)))).trim());
                                 }
                                 else {
                                     item.setTitle(MessageFormat.format(LocaleFactory.localizedString(title),
@@ -3504,7 +3498,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
                 else {
                     if(pasteboard.size() == 1) {
                         item.setTitle(MessageFormat.format(LocaleFactory.localizedString(title),
-                                "\"" + pasteboard.get(0).getName() + "\"").trim());
+                                String.format("\"%s\"", pasteboard.get(0).getName())).trim());
                     }
                     else {
                         item.setTitle(MessageFormat.format(LocaleFactory.localizedString(title),
@@ -3514,13 +3508,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
             }
         }
         else if(action.equals(Foundation.selector("cut:")) || action.equals(Foundation.selector("copy:"))) {
-            String title = null;
-            if(action.equals(Foundation.selector("cut:"))) {
-                title = "Cut {0}";
-            }
-            else if(action.equals(Foundation.selector("copy:"))) {
-                title = "Copy {0}";
-            }
+            final String title = action.equals(Foundation.selector("cut:")) ? "Cut {0}" : "Copy {0}";
             if(this.isMounted()) {
                 int count = this.getSelectionCount();
                 if(0 == count) {
