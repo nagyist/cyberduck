@@ -15,31 +15,14 @@ package ch.cyberduck.core.profiles;
  * GNU General Public License for more details.
  */
 
-import ch.cyberduck.core.Protocol;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.Set;
 
 public interface ProfileMatcher {
     /**
-     * @param next Description of profile installed
-     * @return Non null if profile from server has been updated. Matching profile with later version in repository.
+     * @param repository Description of available profiles in repository
+     * @param installed Description of profile installed
+     * @return Non-null if profile from server has been updated. Matching profile with later version from remote repository.
      */
-    Optional<ProfileDescription> compare(ProfileDescription next);
-
-    class IdentifierProtocolPredicate implements Predicate<Protocol> {
-        private final Protocol installed;
-
-        public IdentifierProtocolPredicate(final Protocol installed) {
-            this.installed = installed;
-        }
-
-        @Override
-        public boolean test(final Protocol protocol) {
-            return StringUtils.equals(installed.getIdentifier(), protocol.getIdentifier())
-                && StringUtils.equals(installed.getProvider(), protocol.getProvider());
-        }
-    }
+    Optional<ProfileDescription> compare(Set<ProfileDescription> repository, ProfileDescription installed);
 }

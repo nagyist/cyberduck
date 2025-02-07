@@ -44,7 +44,9 @@ public abstract class ListFilteringFeature {
      * @return Null if not found
      */
     protected Path search(final Path file, final ListProgressListener listener) throws BackgroundException {
-        final AttributedList<Path> list = session._getFeature(ListService.class).list(file.getParent(), listener);
+        final Path directory = file.getParent();
+        log.debug("Lookup {} in {}", file, directory);
+        final AttributedList<Path> list = session._getFeature(ListService.class).list(directory, listener);
         // Try to match path only as the version might have changed in the meantime
         final Path found = list.find(new ListFilteringPredicate(session.getCaseSensitivity(), file));
         if(null == found) {
@@ -73,8 +75,12 @@ public abstract class ListFilteringFeature {
                 // Search with specific version and region
                 return super.test(f);
             }
-            if(f.attributes().isDuplicate() || f.attributes().isHidden()) {
+            if(f.attributes().isDuplicate()) {
                 // Filter previous versions and delete markers when searching for no specific version
+                return false;
+            }
+            if(f.attributes().isTrashed()) {
+                // Filter trashed files
                 return false;
             }
             switch(sensitivity) {

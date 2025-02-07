@@ -355,11 +355,15 @@ public abstract class AbstractProtocol implements Protocol {
 
     @Override
     public Set<Location.Name> getRegions() {
+        final String region = this.getRegion();
+        if(StringUtils.isNotBlank(region)) {
+            return this.toLocations(Collections.singletonList(region));
+        }
         return Collections.emptySet();
     }
 
     @Override
-    public Set<Location.Name> getRegions(final List<String> regions) {
+    public Set<Location.Name> toLocations(final List<String> regions) {
         return regions.stream().map(Location.Name::new).collect(Collectors.toSet());
     }
 
