@@ -3812,7 +3812,7 @@ namespace Ch.Cyberduck.Ui.Controller
                 private readonly Path _directory;
 
                 public InnerLoadVaultWorker(BrowserController controller, VaultRegistry registry, Path directory)
-                    : base(new LoadingVaultLookupListener(registry, PasswordCallbackFactory.get(controller)), directory, 
+                    : base(new RegistryVaultLoader(registry, PasswordCallbackFactory.get(controller)), directory,
                         new VaultMetadata(VaultMetadata.Type.valueOf(PreferencesFactory.get().getProperty("cryptomator.vault.default"))))
                 {
                     _controller = controller;

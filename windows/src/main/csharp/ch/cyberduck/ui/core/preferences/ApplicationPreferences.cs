@@ -118,7 +118,7 @@ namespace Ch.Cyberduck.Ui.Core.Preferences
                 this.setDefault("factory.rendezvous.class", typeof(Rendezvous).AssemblyQualifiedName);
                 this.setDefault("factory.updater.class", typeof(WinSparklePeriodicUpdateChecker).AssemblyQualifiedName);
             }
-            this.setDefault("factory.vaultprovider.class", typeof(CryptoVaultProvider).AssemblyQualifiedName);
+            this.setDefault("factory.vaultprovider.class", typeof(DefaultVaultProvider).AssemblyQualifiedName);
             this.setDefault("factory.securerandom.class", typeof(FastSecureRandomProvider).AssemblyQualifiedName);
             this.setDefault("factory.pasteboardservice.class", typeof(ClipboardService).AssemblyQualifiedName);
         }
