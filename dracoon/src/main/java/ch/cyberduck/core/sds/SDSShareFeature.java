@@ -39,7 +39,6 @@ import ch.cyberduck.core.sds.io.swagger.client.model.UserKeyPairContainer;
 import ch.cyberduck.core.sds.triplecrypt.TripleCryptConverter;
 import ch.cyberduck.core.sds.triplecrypt.TripleCryptExceptionMappingService;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -126,7 +125,8 @@ public class SDSShareFeature implements Share<CreateDownloadShareRequest, Create
                 if(null == options.getPassword()) {
                     pair = Crypto.generateUserKeyPair(session.requiredKeyPairVersion(), callback.prompt(
                             bookmark, LocaleFactory.localizedString("Passphrase", "Cryptomator"),
-                            LocaleFactory.localizedString("Provide additional login credentials", "Credentials"), new LoginOptions().icon(session.getHost().getProtocol().disk())
+                            LocaleFactory.localizedString("Provide additional login credentials", "Credentials"),
+                            new LoginOptions().icon(session.getHost().getProtocol().disk())
                     ).getPassword().toCharArray());
                 }
                 else {

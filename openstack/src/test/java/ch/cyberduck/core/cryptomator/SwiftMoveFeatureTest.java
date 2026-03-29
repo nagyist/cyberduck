@@ -62,9 +62,11 @@ public class SwiftMoveFeatureTest extends AbstractSwiftTest {
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path folder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path file = new Path(folder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
-        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final SwiftRegionService regionService = new SwiftRegionService(session);
+        final DefaultVaultProvider provider = new DefaultVaultProvider(session);
+        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
+        final SwiftRegionService regionService = new SwiftRegionService(session);
         cryptomator.getFeature(session, Directory.class, new SwiftDirectoryFeature(session, regionService)).mkdir(
                 cryptomator.getFeature(session, Write.class, new SwiftWriteFeature(session, regionService)), folder, new TransferStatus());
         new CryptoTouchFeature<>(session, new SwiftTouchFeature(session, regionService), cryptomator).touch(

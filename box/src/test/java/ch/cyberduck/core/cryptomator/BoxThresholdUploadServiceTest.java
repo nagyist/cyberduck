@@ -79,10 +79,10 @@ public class BoxThresholdUploadServiceTest extends AbstractBoxTest {
         final Path container = new BoxDirectoryFeature(session, fileid).mkdir(new BoxWriteFeature(session, fileid), new Path(new AlphanumericRandomStringService().random(), EnumSet.of(AbstractPath.Type.directory)), new TransferStatus().setLength(0L));
         final Path vault = new Path(container, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path test = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
-        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final DefaultVaultRegistry registry = new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator);
-        session.withRegistry(registry);
-        registry.add(cryptomator);
+        final DefaultVaultProvider provider = new DefaultVaultProvider(session);
+        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final Local local = new Local(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
         final byte[] content = RandomUtils.nextBytes(50240000);
         IOUtils.write(content, local.getOutputStream(false));
@@ -94,7 +94,7 @@ public class BoxThresholdUploadServiceTest extends AbstractBoxTest {
         bulk.pre(Transfer.Type.upload, Collections.singletonMap(new TransferItem(test), writeStatus), ConnectionCallback.noop);
         final BytecountStreamListener count = new BytecountStreamListener();
         final CryptoUploadFeature feature = new CryptoUploadFeature<>(session,
-                new BoxThresholdUploadService(session, fileid, registry),
+                new BoxThresholdUploadService(session, fileid, session.getRegistry()),
                 cryptomator);
         feature.upload(
                 new CryptoWriteFeature<>(session, new BoxWriteFeature(session, fileid), cryptomator), test, local, new BandwidthThrottle(BandwidthThrottle.UNLIMITED), ProgressListener.noop, count, writeStatus, ConnectionCallback.noop);

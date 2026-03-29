@@ -38,7 +38,6 @@ import ch.cyberduck.core.io.StreamCopier;
 import ch.cyberduck.core.io.StreamListener;
 import ch.cyberduck.core.local.DefaultLocalDirectoryFeature;
 import ch.cyberduck.core.notification.DisabledNotificationService;
-import ch.cyberduck.core.preferences.PreferencesFactory;
 import ch.cyberduck.core.sftp.AbstractSFTPTest;
 import ch.cyberduck.core.sftp.SFTPAttributesFinderFeature;
 import ch.cyberduck.core.sftp.SFTPDeleteFeature;
@@ -84,8 +83,6 @@ public class CryptoSFTPSingleTransferWorkerTest extends AbstractSFTPTest {
 
     @Test
     public void testUpload() throws Exception {
-        PreferencesFactory.get().setProperty("factory.vaultprovider.class", DefaultVaultProvider.class.getName());
-
         final Path home = new SFTPHomeDirectoryService(session).find();
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         StringBuilder directoryname = new StringBuilder();

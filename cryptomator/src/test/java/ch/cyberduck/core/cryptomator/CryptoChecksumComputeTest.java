@@ -61,7 +61,9 @@ public class CryptoChecksumComputeTest extends AbstractCryptoTests {
                 return super._getFeature(type);
             }
         };
-        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        final DefaultVaultProvider provider = new DefaultVaultProvider(session);
+        final AbstractVault cryptomator = provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.load(session, cryptomator.getHome(), new VaultMetadata(vaultVersion), new VaultCredentials("test"));
         final ByteBuffer header = cryptomator.getFileHeaderCryptor().encryptHeader(cryptomator.getFileHeaderCryptor().create());
         // DEFAULT_PIPE_SIZE=1024
         final SHA256ChecksumCompute sha = new SHA256ChecksumCompute();

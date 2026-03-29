@@ -43,7 +43,6 @@ import ch.cyberduck.core.nio.LocalProtocol;
 import ch.cyberduck.core.nio.LocalReadFeature;
 import ch.cyberduck.core.nio.LocalSession;
 import ch.cyberduck.core.notification.DisabledNotificationService;
-import ch.cyberduck.core.preferences.PreferencesFactory;
 import ch.cyberduck.core.proxy.DisabledProxyFinder;
 import ch.cyberduck.core.threading.CancelCallback;
 import ch.cyberduck.core.transfer.DisabledTransferErrorCallback;
@@ -91,8 +90,6 @@ public class CryptoLocalSingleTransferWorkerTest {
 
     @Test
     public void testUpload() throws Exception {
-        PreferencesFactory.get().setProperty("factory.vaultprovider.class", DefaultVaultProvider.class.getName());
-
         final LocalSession session = new LocalSession(new Host(new LocalProtocol(), new LocalProtocol().getDefaultHostname()));
         session.open(new DisabledProxyFinder(), HostKeyCallback.noop, LoginCallback.noop, CancelCallback.noop);
         session.login(LoginCallback.noop, CancelCallback.noop);
@@ -123,7 +120,7 @@ public class CryptoLocalSingleTransferWorkerTest {
                 return new VaultCredentials("test");
             }
         });
-        vaults.add(cryptomator);
+        vaults.add(new DefaultVaultProvider(session).load(session, cryptomator.getHome(), new VaultMetadata(vaultVersion), new VaultCredentials("test")));
         session.withRegistry(vaults);
         final Transfer t = new UploadTransfer(new Host(new TestProtocol()), Collections.singletonList(new TransferItem(dir1, localDirectory1)), new NullFilter<>());
         assertTrue(new SingleTransferWorker(session, session, t, new TransferOptions(), new TransferSpeedometer(t), new DisabledTransferPrompt() {

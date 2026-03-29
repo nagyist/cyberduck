@@ -113,18 +113,10 @@ public class DefaultVaultProvider implements VaultProvider {
                 vault = new CryptomatorVault(directory);
                 final MasterkeyVaultMetadataProvider masterkey = new MasterkeyVaultMetadataProvider(credentials);
                 vault.create(session, region, masterkey);
-                vault.load(session, masterkey);
                 break;
             case UVF:
                 vault = new UVFVault(directory);
                 vault.create(session, region, new DefaultUVFVaultMetadataProvider(credentials));
-                try {
-                    vault.load(session, new DefaultUVFVaultMetadataProvider(JWEObject.parse(
-                            new String(new ContentReader(session).readBytes(vault.getMasterkeyPath()), StandardCharsets.US_ASCII)), credentials));
-                }
-                catch(ParseException e) {
-                    throw new VaultUnlockException(e.getMessage());
-                }
                 break;
             default:
                 log.error("Unknown vault type {}", metadata.type);
