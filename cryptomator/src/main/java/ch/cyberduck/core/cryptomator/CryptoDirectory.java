@@ -51,7 +51,7 @@ public interface CryptoDirectory {
 
     void destroy();
 
-    DirectoryMetadata getOrCreateDirectoryId(Session<?> session, Path directory) throws BackgroundException;
+    DirectoryMetadata getDirectoryId(Session<?> session, Path directory) throws BackgroundException;
 
     DirectoryMetadata createDirectoryId(final Path directory);
 }

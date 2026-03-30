@@ -239,7 +239,7 @@ public abstract class AbstractVault implements Vault {
     private DirectoryContentCryptor.Decrypting getFilenameDecryptor(final Session<?> session, final Path directory) throws BackgroundException {
         // Read directory id from file
         log.debug("Read directory ID from {}", directory);
-        final DirectoryMetadata metadata = this.getDirectoryProvider().getOrCreateDirectoryId(session, directory.getParent());
+        final DirectoryMetadata metadata = this.getDirectoryProvider().getDirectoryId(session, directory.getParent());
         return this.getCryptor().directoryContentCryptor().fileNameDecryptor(metadata);
     }
 

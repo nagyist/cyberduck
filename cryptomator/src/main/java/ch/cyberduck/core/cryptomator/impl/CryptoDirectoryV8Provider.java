@@ -64,7 +64,7 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
 
     @Override
     public String toEncrypted(final Session<?> session, final Path parent, final String filename, final EnumSet<Path.Type> type) throws BackgroundException {
-        final DirectoryMetadata dirMetadata = this.getOrCreateDirectoryId(session, parent);
+        final DirectoryMetadata dirMetadata = this.getDirectoryId(session, parent);
         this.vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
         final String ciphertextName = this.vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
         log.debug("Encrypted filename {} to {}", filename, ciphertextName);
@@ -82,7 +82,7 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
             attributes.setVersionId(null);
             attributes.setFileId(null);
             // Remember random directory metadata for use in vault
-            final DirectoryMetadata dirMetadata = this.getOrCreateDirectoryId(session, directory);
+            final DirectoryMetadata dirMetadata = this.getDirectoryId(session, directory);
             log.debug("Use directory ID '{}' for folder {}", dirMetadata, directory);
             attributes.setDirectoryId(this.vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata));
             attributes.setDecrypted(directory);
@@ -146,7 +146,7 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
     }
 
     @Override
-    public DirectoryMetadata getOrCreateDirectoryId(final Session<?> session, final Path file) throws BackgroundException {
+    public DirectoryMetadata getDirectoryId(final Session<?> session, final Path file) throws BackgroundException {
         if(file.attributes().getDirectoryId() != null) {
             return this.vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(file.attributes().getDirectoryId());
         }
