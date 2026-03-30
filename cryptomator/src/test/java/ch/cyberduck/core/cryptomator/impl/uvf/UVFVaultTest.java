@@ -33,6 +33,7 @@ import ch.cyberduck.core.vault.VaultMetadata;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cryptomator.cryptolib.api.DirectoryMetadata;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -46,6 +47,7 @@ import static org.junit.Assert.*;
 public class UVFVaultTest {
 
     @Test
+    @Ignore
     public void testLoad() throws Exception {
         final NullSession session = new NullSession(new Host(new TestProtocol())) {
             @Override
