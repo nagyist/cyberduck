@@ -23,10 +23,12 @@ import ch.cyberduck.core.TestProtocol;
 import ch.cyberduck.core.cryptomator.features.CryptoChecksumCompute;
 import ch.cyberduck.core.cryptomator.random.RandomNonceGenerator;
 import ch.cyberduck.core.exception.BackgroundException;
+import ch.cyberduck.core.exception.NotfoundException;
 import ch.cyberduck.core.features.Directory;
 import ch.cyberduck.core.features.Read;
 import ch.cyberduck.core.features.Write;
 import ch.cyberduck.core.io.SHA256ChecksumCompute;
+import ch.cyberduck.core.io.StatusOutputStream;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.VaultCredentials;
 import ch.cyberduck.core.vault.VaultMetadata;
@@ -37,9 +39,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -51,6 +58,9 @@ public class CryptoChecksumComputeTest extends AbstractCryptoTests {
     public void testCompute() throws Exception {
         final Path vault = new Path("/vault", EnumSet.of(Path.Type.directory));
         final NullSession session = new NullSession(new Host(new TestProtocol())) {
+
+            private final Map<String, byte[]> fileStore = new HashMap<>();
+
             @Override
             @SuppressWarnings("unchecked")
             public <T> T _getFeature(final Class<T> type) {
@@ -67,7 +77,31 @@ public class CryptoChecksumComputeTest extends AbstractCryptoTests {
                     return (T) new Read() {
                         @Override
                         public InputStream read(final Path file, final TransferStatus status, final ConnectionCallback callback) throws BackgroundException {
-                            return null;
+                            if(fileStore.containsKey(file.getAbsolute())) {
+                                return new ByteArrayInputStream(fileStore.get(file.getAbsolute()));
+                            }
+                            throw new NotfoundException(file.getAbsolute());
+                        }
+                    };
+                }
+                if(type == Write.class) {
+                    return (T) new Write<Void>() {
+
+                        @Override
+                        public StatusOutputStream<Void> write(final Path file, final TransferStatus status, final ConnectionCallback callback) throws BackgroundException {
+                            final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                            return new StatusOutputStream<Void>(buffer) {
+                                @Override
+                                public void close() throws IOException {
+                                    super.close();
+                                    fileStore.put(file.getAbsolute(), buffer.toByteArray());
+                                }
+
+                                @Override
+                                public Void getStatus() {
+                                    return null;
+                                }
+                            };
                         }
                     };
                 }
@@ -75,8 +109,8 @@ public class CryptoChecksumComputeTest extends AbstractCryptoTests {
             }
         };
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        final AbstractVault cryptomator = provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        provider.load(session, cryptomator.getHome(), new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
         final ByteBuffer header = cryptomator.getFileHeaderCryptor().encryptHeader(cryptomator.getFileHeaderCryptor().create());
         // DEFAULT_PIPE_SIZE=1024
         final SHA256ChecksumCompute sha = new SHA256ChecksumCompute();
