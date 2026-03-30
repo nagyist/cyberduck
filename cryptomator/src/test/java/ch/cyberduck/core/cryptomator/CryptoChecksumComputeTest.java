@@ -34,7 +34,6 @@ import ch.cyberduck.core.vault.VaultCredentials;
 import ch.cyberduck.core.vault.VaultMetadata;
 
 import org.apache.commons.io.input.NullInputStream;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -51,7 +50,6 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(value = Parameterized.class)
-@Ignore
 public class CryptoChecksumComputeTest extends AbstractCryptoTests {
 
     @Test
