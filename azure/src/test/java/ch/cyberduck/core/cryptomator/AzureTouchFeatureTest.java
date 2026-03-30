@@ -21,7 +21,6 @@ import ch.cyberduck.core.LoginCallback;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.azure.AbstractAzureTest;
 import ch.cyberduck.core.azure.AzureDeleteFeature;
-import ch.cyberduck.core.azure.AzureFindFeature;
 import ch.cyberduck.core.azure.AzureTouchFeature;
 import ch.cyberduck.core.azure.AzureWriteFeature;
 import ch.cyberduck.core.cryptomator.features.CryptoTouchFeature;
@@ -35,7 +34,6 @@ import ch.cyberduck.core.vault.VaultCredentials;
 import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.test.IntegrationTest;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -51,29 +49,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(value = Parameterized.class)
 public class AzureTouchFeatureTest extends AbstractAzureTest {
 
-    //TODO
-
     @Test
-    @Ignore(value = "Filename shortening not yet implemented")
-    public void testTouchLongFilenameEncrypted() throws Exception {
-        final Path home = new Path("cyberduck", EnumSet.of(Path.Type.volume, Path.Type.directory));
-        final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
-        final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
-        final TransferStatus status = new TransferStatus();
-        final Path test = new CryptoTouchFeature<>(session, new AzureTouchFeature(session), cryptomator).touch(
-                new CryptoWriteFeature<>(session, new AzureWriteFeature(session), cryptomator), new Path(vault, new AlphanumericRandomStringService(130).random(), EnumSet.of(Path.Type.file)), status);
-        assertEquals(TransferStatus.UNKNOWN_LENGTH, test.attributes().getSize());
-        assertEquals(TransferStatus.UNKNOWN_LENGTH, status.getResponse().getSize());
-        assertTrue(cryptomator.getFeature(session, Find.class, new AzureFindFeature(session)).find(test));
-        cryptomator.getFeature(session, Delete.class, new AzureDeleteFeature(session)).delete(Arrays.asList(test, vault), LoginCallback.noop, new Delete.DisabledCallback());
-    }
-
-    @Test
-    @Ignore(value = "Filename shortening not yet implemented")
-    public void testTouchLongFilenameEncryptedDefaultFeature() throws Exception {
+    public void testTouchEncryptedDefaultFeature() throws Exception {
         final Path home = new Path("cyberduck", EnumSet.of(Path.Type.volume, Path.Type.directory));
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
