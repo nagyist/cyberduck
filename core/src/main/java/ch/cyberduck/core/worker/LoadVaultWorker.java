@@ -20,26 +20,26 @@ import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Session;
 import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.features.Vault;
-import ch.cyberduck.core.vault.VaultLookupListener;
+import ch.cyberduck.core.vault.VaultLoader;
 import ch.cyberduck.core.vault.VaultMetadata;
 
 import java.util.Objects;
 
 public class LoadVaultWorker extends Worker<Vault> {
 
-    private final VaultLookupListener listener;
+    private final VaultLoader loader;
     private final Path directory;
     private final VaultMetadata metadata;
 
-    public LoadVaultWorker(final VaultLookupListener listener, final Path directory, final VaultMetadata metadata) {
-        this.listener = listener;
+    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultMetadata metadata) {
+        this.loader = loader;
         this.directory = directory;
         this.metadata = metadata;
     }
 
     @Override
     public Vault run(final Session<?> session) throws BackgroundException {
-        return listener.load(session, directory, metadata);
+        return loader.load(session, directory, metadata);
     }
 
     @Override

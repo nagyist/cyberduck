@@ -35,14 +35,14 @@ import org.apache.logging.log4j.Logger;
 import java.text.MessageFormat;
 import java.util.EnumSet;
 
-public class LoadingVaultLookupListener implements VaultLookupListener {
-    private static final Logger log = LogManager.getLogger(LoadingVaultLookupListener.class);
+public class RegistryVaultLoader implements VaultLoader {
+    private static final Logger log = LogManager.getLogger(RegistryVaultLoader.class);
 
     private final PasswordStore keychain = PasswordStoreFactory.get();
     private final VaultRegistry registry;
     private final PasswordCallback prompt;
 
-    public LoadingVaultLookupListener(final VaultRegistry registry, final PasswordCallback prompt) {
+    public RegistryVaultLoader(final VaultRegistry registry, final PasswordCallback prompt) {
         this.registry = registry;
         this.prompt = prompt;
     }

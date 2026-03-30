@@ -85,7 +85,7 @@ import ch.cyberduck.core.transfer.TransferItem;
 import ch.cyberduck.core.transfer.TransferOptions;
 import ch.cyberduck.core.transfer.TransferQueue;
 import ch.cyberduck.core.transfer.UploadTransfer;
-import ch.cyberduck.core.vault.LoadingVaultLookupListener;
+import ch.cyberduck.core.vault.RegistryVaultLoader;
 import ch.cyberduck.core.vault.VaultCredentials;
 import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultRegistry;
@@ -2467,7 +2467,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
         }
         else {
             // Unlock vault
-            this.background(new WorkerBackgroundAction<>(this, pool, new LoadVaultWorker(new LoadingVaultLookupListener(pool.getVaultRegistry(),
+            this.background(new WorkerBackgroundAction<>(this, pool, new LoadVaultWorker(new RegistryVaultLoader(pool.getVaultRegistry(),
                     PasswordCallbackFactory.get(this)), directory,
                     new VaultMetadata(VaultMetadata.Type.valueOf(preferences.getProperty("cryptomator.vault.default")))) {
                 @Override

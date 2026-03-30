@@ -34,14 +34,14 @@ public class VaultFinderListProgressListener extends IndexedListProgressListener
     private static final Logger log = LogManager.getLogger(VaultFinderListProgressListener.class);
 
     private final Session<?> session;
-    private final VaultLookupListener lookup;
+    private final VaultLoader lookup;
     private final ListProgressListener proxy;
     // Number of files to wait for until proxy is notified of files
     private final int filecount;
     private final AtomicBoolean canceled = new AtomicBoolean();
     private final VaultProvider provider;
 
-    public VaultFinderListProgressListener(final Session<?> session, final VaultLookupListener lookup, final ListProgressListener proxy, final int filecount) {
+    public VaultFinderListProgressListener(final Session<?> session, final VaultLoader lookup, final ListProgressListener proxy, final int filecount) {
         this.session = session;
         this.lookup = lookup;
         this.proxy = proxy;

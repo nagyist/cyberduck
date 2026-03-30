@@ -19,15 +19,14 @@ import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Session;
 import ch.cyberduck.core.features.Vault;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-public final class DisabledVaultLookupListener implements VaultLookupListener {
-    private static final Logger log = LogManager.getLogger(DisabledVaultLookupListener.class);
-
-    @Override
-    public Vault load(final Session session, Path directory, final VaultMetadata metadata) {
-        log.warn("Ignore vault {}", metadata);
-        return Vault.DISABLED;
-    }
+public interface VaultLoader {
+    /**
+     * Loads an existing vault using the specified configuration and parameters.
+     *
+     * @param session   The session object providing access to the connection.
+     * @param directory The directory where the vault is located.
+     * @return The loaded vault instance.
+     * @throws VaultUnlockCancelException If the vault unlock operation is canceled.
+     */
+    Vault load(Session<?> session, Path directory, VaultMetadata metadata) throws VaultUnlockCancelException;
 }

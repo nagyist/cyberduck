@@ -22,7 +22,7 @@ import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.preferences.HostPreferencesFactory;
-import ch.cyberduck.core.vault.VaultLookupListener;
+import ch.cyberduck.core.vault.VaultLoader;
 import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultProvider;
 import ch.cyberduck.core.vault.VaultRegistry;
@@ -39,11 +39,11 @@ public class VaultRegistryFindFeature implements Find {
     private final Session<?> session;
     private final Find proxy;
     private final VaultRegistry registry;
-    private final VaultLookupListener lookup;
+    private final VaultLoader lookup;
     private final boolean autodetect;
     private final VaultProvider provider;
 
-    public VaultRegistryFindFeature(final Session<?> session, final Find proxy, final VaultRegistry registry, final VaultLookupListener lookup) {
+    public VaultRegistryFindFeature(final Session<?> session, final Find proxy, final VaultRegistry registry, final VaultLoader lookup) {
         this.session = session;
         this.proxy = proxy;
         this.registry = registry;
