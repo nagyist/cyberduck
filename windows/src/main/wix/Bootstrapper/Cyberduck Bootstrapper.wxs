@@ -1,7 +1,8 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
   <Bundle Name="Cyberduck" Version="!(bind.packageVersion.Setup)" Manufacturer="iterate GmbH" UpgradeCode="69C1D059-4B45-4220-A82C-DAE80C9CD8E0" IconSourceFile="$(CyberduckDir)cyberduck-application.ico">
     <BootstrapperApplication>
-      <bal:WixStandardBootstrapperApplication LicenseUrl="" LogoFile="$(SetupDir)banner.png" LogoSideFile="$(SetupDir)welcome.bmp" ThemeFile="InstallerTheme.xml" Theme="hyperlinkSidebarLicense" />
+      <bal:WixStandardBootstrapperApplication LicenseUrl="" LogoFile="$(CyberduckDir)cyberduck-application.png" LogoSideFile="$(SetupDir)side.png" ThemeFile="InstallerTheme.xml" Theme="hyperlinkSidebarLicense" />
+      <Payload Name="icon.ico" SourceFile="$(CyberduckDir)cyberduck-application.ico" Compressed="yes" />
     </BootstrapperApplication>
     <Variable Name="InstallFolder" Type="formatted" Value="[ProgramFiles64Folder]Cyberduck" />
     <Variable Name="InstallBonjour" bal:Overridable="yes" Type="numeric" Value="1" />
