@@ -30,13 +30,13 @@ import java.text.MessageFormat;
 import java.util.EnumSet;
 import java.util.Optional;
 
-public class CryptoMoveV7Feature implements Move {
+public class CryptoMoveFeature implements Move {
 
     private final Session<?> session;
     private final Move proxy;
     private final AbstractVault vault;
 
-    public CryptoMoveV7Feature(final Session<?> session, final Move delegate, final AbstractVault vault) {
+    public CryptoMoveFeature(final Session<?> session, final Move delegate, final AbstractVault vault) {
         this.session = session;
         this.proxy = delegate;
         this.vault = vault;

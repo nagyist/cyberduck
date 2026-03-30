@@ -321,12 +321,7 @@ public abstract class AbstractVault implements Vault {
                 return (T) new CryptoMultipartWriteFeature(session, (Write) delegate, this);
             }
             if(type == Move.class) {
-                //TODO
-                return (T) new CryptoMoveV7Feature(session, (Move) delegate, this);
-//                return (T) (this.getVersion() == VAULT_VERSION_DEPRECATED ?
-//                        new CryptoMoveV6Feature(session, (Move) delegate, this) :
-//                        new CryptoMoveV7Feature(session, (Move) delegate, this));
-
+                return (T) new CryptoMoveFeature(session, (Move) delegate, this);
             }
             if(type == AttributesFinder.class) {
                 return (T) new CryptoAttributesFeature(session, (AttributesFinder) delegate, this);
@@ -345,17 +340,9 @@ public abstract class AbstractVault implements Vault {
             }
             if(type == Delete.class) {
                 return (T) new CryptoDeleteFeature(session, (Delete) delegate, this);
-                //TODO
-//                return (T) (this.getVersion() == VAULT_VERSION_DEPRECATED ?
-//                        new CryptoDeleteV6Feature(session, (Delete) delegate, this) :
-//                        new CryptoDeleteV7Feature(session, (Delete) delegate, this));
             }
             if(type == Trash.class) {
-                //TODO
                 return (T) new CryptoDeleteFeature(session, (Delete) delegate, this);
-//                return (T) (this.getVersion() == VAULT_VERSION_DEPRECATED ?
-//                        new CryptoDeleteV6Feature(session, (Delete) delegate, this) :
-//                        new CryptoDeleteV7Feature(session, (Delete) delegate, this));
             }
             if(type == Symlink.class) {
                 return (T) new CryptoSymlinkFeature(session, (Symlink) delegate, this);
