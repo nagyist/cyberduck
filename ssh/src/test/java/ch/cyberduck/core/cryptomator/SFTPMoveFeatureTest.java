@@ -41,7 +41,7 @@ import ch.cyberduck.core.shared.DefaultTouchFeature;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.DefaultVaultRegistry;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.test.IntegrationTest;
 
 import org.junit.Ignore;
@@ -68,8 +68,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path source = new Path(vault, UUID.randomUUID().toString(), EnumSet.of(Path.Type.file));
         final Path target = new Path(vault, UUID.randomUUID().toString(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         new CryptoTouchFeature<>(session, new CryptoTouchFeature<>(session, new DefaultTouchFeature<Void>(
                 session), cryptomator), cryptomator).touch(new CryptoWriteFeature<>(session, new SFTPWriteFeature(session), cryptomator), source, new TransferStatus());
@@ -89,8 +89,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path targetFolder = new Path(vault, UUID.randomUUID().toString(), EnumSet.of(Path.Type.directory));
         final Path target = new Path(targetFolder, UUID.randomUUID().toString(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         new CryptoTouchFeature<>(session, new CryptoTouchFeature<>(session, new DefaultTouchFeature<Void>(
                 session), cryptomator), cryptomator).touch(new CryptoWriteFeature<>(session, new SFTPWriteFeature(session), cryptomator), source, new TransferStatus());
@@ -114,8 +114,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path targetFolder = new Path(vault, new AlphanumericRandomStringService(130).random(), EnumSet.of(Path.Type.directory));
         final Path target = new Path(targetFolder, new AlphanumericRandomStringService(130).random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         new CryptoTouchFeature<>(session, new CryptoTouchFeature<>(session, new DefaultTouchFeature<Void>(
                 session), cryptomator), cryptomator).touch(new CryptoWriteFeature<>(session, new SFTPWriteFeature(session), cryptomator), source, new TransferStatus());
@@ -135,8 +135,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path folder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new SFTPDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new SFTPWriteFeature(session)), folder, new TransferStatus());
@@ -162,8 +162,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path folder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new SFTPDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new SFTPWriteFeature(session)), folder, new TransferStatus());
@@ -184,8 +184,8 @@ public class SFTPMoveFeatureTest extends AbstractSFTPTest {
         final Path folder = new Path(vault, "folder-1", EnumSet.of(Path.Type.directory));
         final Path file = new Path(folder, "file-1", EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new SFTPDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new SFTPWriteFeature(session)), folder, new TransferStatus());

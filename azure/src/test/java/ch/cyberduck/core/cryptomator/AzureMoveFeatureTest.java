@@ -38,7 +38,7 @@ import ch.cyberduck.core.shared.DefaultFindFeature;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.DefaultVaultRegistry;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.test.IntegrationTest;
 
 import org.junit.Test;
@@ -61,8 +61,8 @@ public class AzureMoveFeatureTest extends AbstractAzureTest {
         final Path home = new Path("cyberduck", EnumSet.of(Path.Type.directory, Path.Type.volume));
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final Path folder = cryptomator.getFeature(session, Directory.class, new AzureDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new AzureWriteFeature(session)), new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory)), new TransferStatus());

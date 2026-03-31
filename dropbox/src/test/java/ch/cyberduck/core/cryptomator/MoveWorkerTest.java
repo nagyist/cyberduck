@@ -42,7 +42,7 @@ import ch.cyberduck.core.shared.DefaultHomeFinderService;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.DefaultVaultRegistry;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.core.worker.MoveWorker;
 import ch.cyberduck.test.IntegrationTest;
 
@@ -68,8 +68,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path source = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final Path target = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         new CryptoTouchFeature<>(session, new DropboxTouchFeature(session), cryptomator).touch(
                 new CryptoWriteFeature<>(session, new DropboxWriteFeature(session), cryptomator), source, new TransferStatus());
@@ -89,8 +89,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path targetFolder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path target = new Path(targetFolder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         new CryptoTouchFeature<>(session, new DropboxTouchFeature(session), cryptomator).touch(
                 new CryptoWriteFeature<>(session, new DropboxWriteFeature(session), cryptomator), source, new TransferStatus());
@@ -112,8 +112,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path folder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path file = new Path(folder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new DropboxDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new DropboxWriteFeature(session)), folder, new TransferStatus());
@@ -153,8 +153,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path encryptedFolder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path encryptedFile = new Path(encryptedFolder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new DropboxDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new DropboxWriteFeature(session)), encryptedFolder, new TransferStatus());
@@ -179,8 +179,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         assertTrue(new DefaultFindFeature(session).find(clearFolder));
         assertTrue(new DefaultFindFeature(session).find(clearFile));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         // move directory into vault
         final Path encryptedFolder = new Path(vault, clearFolder.getName(), EnumSet.of(Path.Type.directory));
@@ -204,8 +204,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path encryptedFolder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path encryptedFile = new Path(encryptedFolder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new DropboxDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new DropboxWriteFeature(session)), encryptedFolder, new TransferStatus());
@@ -231,8 +231,8 @@ public class MoveWorkerTest extends AbstractDropboxTest {
         final Path encryptedFolder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path encryptedFile = new Path(encryptedFolder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         cryptomator.getFeature(session, Directory.class, new DropboxDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new DropboxWriteFeature(session)), encryptedFolder, new TransferStatus());

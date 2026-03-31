@@ -20,7 +20,7 @@ import ch.cyberduck.core.serializer.Serializer;
 
 import java.util.Objects;
 
-public class VaultMetadata implements Serializable {
+public class VaultVersion implements Serializable {
 
     public Type type;
 
@@ -28,10 +28,10 @@ public class VaultMetadata implements Serializable {
         V8, UVF
     }
 
-    public VaultMetadata() {
+    public VaultVersion() {
     }
 
-    public VaultMetadata(final Type type) {
+    public VaultVersion(final Type type) {
         this.type = type;
     }
 
@@ -45,11 +45,11 @@ public class VaultMetadata implements Serializable {
 
     @Override
     public final boolean equals(final Object o) {
-        if(!(o instanceof VaultMetadata)) {
+        if(!(o instanceof VaultVersion)) {
             return false;
         }
 
-        VaultMetadata that = (VaultMetadata) o;
+        VaultVersion that = (VaultVersion) o;
         return type == that.type;
     }
 

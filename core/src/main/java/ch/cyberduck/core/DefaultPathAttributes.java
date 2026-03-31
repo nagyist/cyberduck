@@ -24,7 +24,7 @@ import ch.cyberduck.core.io.Checksum;
 import ch.cyberduck.core.serializer.Serializer;
 import ch.cyberduck.core.transfer.TransferStatus;
 
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -146,7 +146,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
     /**
      * Cryptomator vault metadata
      */
-    private VaultMetadata vaultMetadata;
+    private VaultVersion vaultMetadata;
     /**
      * Cryptomator decrypted path
      */
@@ -525,12 +525,12 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
     }
 
     @Override
-    public VaultMetadata getVaultMetadata() {
+    public VaultVersion getVaultMetadata() {
         return vaultMetadata;
     }
 
     @Override
-    public PathAttributes setVaultMetadata(final VaultMetadata vaultMetadata) {
+    public PathAttributes setVaultMetadata(final VaultVersion vaultMetadata) {
         this.vaultMetadata = vaultMetadata;
         return this;
     }

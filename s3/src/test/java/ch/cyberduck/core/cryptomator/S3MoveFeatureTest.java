@@ -38,7 +38,7 @@ import ch.cyberduck.core.shared.DefaultFindFeature;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.DefaultVaultRegistry;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.core.worker.DeleteWorker;
 import ch.cyberduck.test.IntegrationTest;
 
@@ -64,8 +64,8 @@ public class S3MoveFeatureTest extends AbstractS3Test {
         final Path folder = new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final Path file = new Path(folder, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        provider.create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
-        final AbstractVault cryptomator = provider.load(session, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final S3AccessControlListFeature acl = new S3AccessControlListFeature(session);
         cryptomator.getFeature(session, Directory.class, new S3DirectoryFeature(session, acl)).mkdir(

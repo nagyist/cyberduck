@@ -38,9 +38,9 @@ import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.CredentialsVaultMetadataProvider;
 import ch.cyberduck.core.vault.VaultCredentials;
 import ch.cyberduck.core.vault.VaultException;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultMetadataProvider;
 import ch.cyberduck.core.vault.VaultUnlockException;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -308,8 +308,8 @@ public class CryptomatorVault extends AbstractVault {
     }
 
     @Override
-    public VaultMetadata getMetadata() {
-        return new VaultMetadata(VaultMetadata.Type.V8);
+    public VaultVersion getMetadata() {
+        return new VaultVersion(VaultVersion.Type.V8);
     }
 
     @Override

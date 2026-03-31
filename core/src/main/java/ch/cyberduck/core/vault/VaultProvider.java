@@ -31,7 +31,7 @@ public interface VaultProvider {
      * @param file The file to test to match the vault metadata filename pattern.
      * @return Vault description or null when no match.
      */
-    VaultMetadata matches(Path file);
+    VaultVersion matches(Path file);
 
     /**
      * Searches for vault metadata in the specified directory using the given criteria.
@@ -42,7 +42,7 @@ public interface VaultProvider {
      * @return The vault metadata found in the specified directory based on the provided criteria.
      * @throws BackgroundException If an error occurs during the search process.
      */
-    VaultMetadata find(Path directory, Find find, ListProgressListener listener) throws BackgroundException;
+    VaultVersion find(Path directory, Find find, ListProgressListener listener) throws BackgroundException;
 
     /**
      * Provides access to an existing vault based on the given session, directory, and metadata.
@@ -54,7 +54,7 @@ public interface VaultProvider {
      * @throws UnsupportedException If the vault cannot be provided due to unsupported conditions.
      */
 
-    Vault load(Session<?> session, Path directory, VaultMetadata metadata, VaultCredentials credentials) throws BackgroundException;
+    Vault load(Session<?> session, Path directory, VaultVersion metadata, VaultCredentials credentials) throws BackgroundException;
 
     /**
      * Creates a new vault in the specified directory with the provided credentials and metadata.
@@ -67,7 +67,7 @@ public interface VaultProvider {
      * @return An instance of the newly created vault.
      * @throws BackgroundException If an error occurs during the vault creation process.
      */
-    Vault create(Session<?> session, String region, Path directory, VaultMetadata metadata, VaultCredentials credentials) throws BackgroundException;
+    Vault create(Session<?> session, String region, Path directory, VaultVersion metadata, VaultCredentials credentials) throws BackgroundException;
 
     VaultProvider DISABLED = new DisabledVaultProvider();
 }

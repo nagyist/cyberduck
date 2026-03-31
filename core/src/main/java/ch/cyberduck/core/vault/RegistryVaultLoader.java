@@ -37,7 +37,7 @@ public class RegistryVaultLoader implements VaultLoader {
     }
 
     @Override
-    public Vault load(final Session<?> session, final Path directory, final VaultMetadata metadata) throws VaultUnlockCancelException {
+    public Vault load(final Session<?> session, final Path directory, final VaultVersion metadata) throws VaultUnlockCancelException {
         final Vault vault = proxy.load(session, directory, metadata);
         if(registry.add(vault)) {
             final EnumSet<Path.Type> type = directory.getType();

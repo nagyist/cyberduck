@@ -32,8 +32,8 @@ import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.features.Write;
 import ch.cyberduck.core.preferences.PreferencesFactory;
 import ch.cyberduck.core.transfer.TransferStatus;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultMetadataProvider;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -216,8 +216,8 @@ public class UVFVault extends AbstractVault {
     }
 
     @Override
-    public VaultMetadata getMetadata() {
-        return new VaultMetadata(VaultMetadata.Type.UVF);
+    public VaultVersion getMetadata() {
+        return new VaultVersion(VaultVersion.Type.UVF);
     }
 
     @Override

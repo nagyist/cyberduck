@@ -97,7 +97,7 @@ public final class DisabledVault implements Vault {
     }
 
     @Override
-    public VaultMetadata getMetadata() {
+    public VaultVersion getMetadata() {
         return null;
     }
 

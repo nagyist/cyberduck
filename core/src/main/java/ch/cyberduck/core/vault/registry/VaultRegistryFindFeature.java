@@ -23,10 +23,10 @@ import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.preferences.HostPreferencesFactory;
 import ch.cyberduck.core.vault.VaultLoader;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultProvider;
 import ch.cyberduck.core.vault.VaultRegistry;
 import ch.cyberduck.core.vault.VaultUnlockCancelException;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,7 +64,7 @@ public class VaultRegistryFindFeature implements Find {
                 final Path key = new Path(directory,
                         HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.masterkey.filename"), EnumSet.of(Path.Type.file));
 
-                final VaultMetadata metadata = provider.find(directory, proxy, listener);
+                final VaultVersion metadata = provider.find(directory, proxy, listener);
                 if(metadata != null) {
                     log.info("Found vault config {} or masterkey {}", vaultConfig, key);
                     try {

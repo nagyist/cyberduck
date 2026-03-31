@@ -48,7 +48,7 @@ public class PasswordVaultLoader implements VaultLoader {
     }
 
     @Override
-    public Vault load(final Session<?> session, final Path directory, final VaultMetadata metadata) throws VaultUnlockCancelException {
+    public Vault load(final Session<?> session, final Path directory, final VaultVersion metadata) throws VaultUnlockCancelException {
         synchronized(registry) {
             if(registry.contains(directory)) {
                 return registry.find(session, directory);
@@ -92,7 +92,7 @@ public class PasswordVaultLoader implements VaultLoader {
         }
     }
 
-    private Vault load(final Session<?> session, final VaultMetadata metadata, final Path directory, final VaultCredentials credentials) throws BackgroundException {
+    private Vault load(final Session<?> session, final VaultVersion metadata, final Path directory, final VaultCredentials credentials) throws BackgroundException {
         try {
             final VaultProvider provider = session.getFeature(VaultProvider.class);
             final Vault vault = provider.load(session, directory, metadata, credentials);

@@ -25,22 +25,22 @@ import ch.cyberduck.core.features.Vault;
 public class DisabledVaultProvider implements VaultProvider {
 
     @Override
-    public VaultMetadata matches(final Path file) {
+    public VaultVersion matches(final Path file) {
         return null;
     }
 
     @Override
-    public VaultMetadata find(final Path directory, final Find find, final ListProgressListener listener) throws BackgroundException {
+    public VaultVersion find(final Path directory, final Find find, final ListProgressListener listener) throws BackgroundException {
         return null;
     }
 
     @Override
-    public Vault load(final Session<?> session, final Path directory, final VaultMetadata metadata, final VaultCredentials credentials) {
+    public Vault load(final Session<?> session, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) {
         return Vault.DISABLED;
     }
 
     @Override
-    public Vault create(final Session<?> session, final String region, final Path directory, final VaultMetadata metadata, final VaultCredentials credentials) throws BackgroundException {
+    public Vault create(final Session<?> session, final String region, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) throws BackgroundException {
         return Vault.DISABLED;
     }
 }

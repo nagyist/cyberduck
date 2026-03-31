@@ -28,7 +28,7 @@ import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.features.Write;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -88,8 +88,8 @@ public class UVFVaultTest {
         final Path directory = new Path(home, "dir", EnumSet.of(Path.Type.directory));
         assertNull(directory.attributes().getVaultMetadata());
         vault.getDirectoryProvider().createDirectoryId(directory);
-        assertEquals(VaultMetadata.Type.UVF, vault.encrypt(session, directory).attributes().getVaultMetadata().type);
-        assertEquals(VaultMetadata.Type.UVF, directory.attributes().getVaultMetadata().type);
+        assertEquals(VaultVersion.Type.UVF, vault.encrypt(session, directory).attributes().getVaultMetadata().type);
+        assertEquals(VaultVersion.Type.UVF, directory.attributes().getVaultMetadata().type);
         assertEquals(vault.encrypt(session, directory), vault.encrypt(session, directory));
         assertEquals(new Path(home, directory.getName(), EnumSet.of(Path.Type.directory, Path.Type.decrypted)), vault.decrypt(session, vault.encrypt(session, directory, true)));
         final Path placeholder = new Path(home, "placeholder", EnumSet.of(Path.Type.directory, Path.Type.placeholder));

@@ -36,7 +36,7 @@ import ch.cyberduck.core.serializer.impl.dd.ProfilePlistReader;
 import ch.cyberduck.core.ssl.DefaultX509KeyManager;
 import ch.cyberduck.core.ssl.DefaultX509TrustManager;
 import ch.cyberduck.core.threading.CancelCallback;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -69,11 +69,11 @@ public class AbstractFTPTest {
 
     @Parameterized.Parameters(name = "vaultVersion = {0}")
     public static Object[] data() {
-        return new Object[]{VaultMetadata.Type.V8, VaultMetadata.Type.UVF};
+        return new Object[]{VaultVersion.Type.V8, VaultVersion.Type.UVF};
     }
 
     @Parameterized.Parameter
-    public VaultMetadata.Type vaultVersion;
+    public VaultVersion.Type vaultVersion;
 
     @After
     public void disconnect() {

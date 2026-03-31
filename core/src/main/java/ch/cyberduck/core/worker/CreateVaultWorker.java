@@ -26,8 +26,8 @@ import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.shared.DefaultUrlProvider;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultProvider;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import java.text.MessageFormat;
 import java.util.EnumSet;
@@ -39,9 +39,9 @@ public class CreateVaultWorker extends Worker<Vault> {
     private final String region;
     private final Path directory;
     private final VaultCredentials passphrase;
-    private final VaultMetadata metadata;
+    private final VaultVersion metadata;
 
-    public CreateVaultWorker(final String region, final Path directory, final VaultCredentials passphrase, final VaultMetadata metadata) {
+    public CreateVaultWorker(final String region, final Path directory, final VaultCredentials passphrase, final VaultVersion metadata) {
         this.region = region;
         this.directory = directory;
         this.passphrase = passphrase;

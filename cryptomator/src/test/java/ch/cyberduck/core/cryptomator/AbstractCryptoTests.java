@@ -15,7 +15,7 @@ package ch.cyberduck.core.cryptomator;
  * GNU General Public License for more details.
  */
 
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.junit.runners.Parameterized;
 
@@ -23,10 +23,10 @@ public abstract class AbstractCryptoTests {
 
     @Parameterized.Parameters(name = "vaultVersion = {0}")
     public static Object[] data() {
-        return new Object[]{VaultMetadata.Type.V8, VaultMetadata.Type.UVF};
+        return new Object[]{VaultVersion.Type.V8, VaultVersion.Type.UVF};
     }
 
     @Parameterized.Parameter
-    public VaultMetadata.Type vaultVersion;
+    public VaultVersion.Type vaultVersion;
 
 }

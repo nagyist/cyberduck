@@ -21,7 +21,7 @@ import ch.cyberduck.core.Session;
 import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.vault.VaultLoader;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import java.util.Objects;
 
@@ -29,9 +29,9 @@ public class LoadVaultWorker extends Worker<Vault> {
 
     private final VaultLoader loader;
     private final Path directory;
-    private final VaultMetadata metadata;
+    private final VaultVersion metadata;
 
-    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultMetadata metadata) {
+    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultVersion metadata) {
         this.loader = loader;
         this.directory = directory;
         this.metadata = metadata;

@@ -22,8 +22,8 @@ import ch.cyberduck.core.exception.LoginCanceledException;
 import ch.cyberduck.core.exception.NotfoundException;
 import ch.cyberduck.core.exception.UnsupportedException;
 import ch.cyberduck.core.vault.DisabledVault;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultMetadataProvider;
+import ch.cyberduck.core.vault.VaultVersion;
 
 public interface Vault {
 
@@ -101,7 +101,7 @@ public interface Vault {
      */
     Path getHome();
 
-    VaultMetadata getMetadata();
+    VaultVersion getMetadata();
 
     enum State {
         open,

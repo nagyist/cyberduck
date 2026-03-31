@@ -26,13 +26,13 @@ public class VaultMetadataDictionary<T> {
         this.factory = factory;
     }
 
-    public VaultMetadata deserialize(final T serialized) {
+    public VaultVersion deserialize(final T serialized) {
         final Deserializer<T> dict = factory.create(serialized);
-        final VaultMetadata vaultMetadata = new VaultMetadata();
+        final VaultVersion vaultMetadata = new VaultVersion();
         final T vaultObj = dict.objectForKey("Root");
         final String type = dict.stringForKey("Type");
         if(type != null) {
-            vaultMetadata.type = VaultMetadata.Type.valueOf(type);
+            vaultMetadata.type = VaultVersion.Type.valueOf(type);
         }
         return vaultMetadata;
     }

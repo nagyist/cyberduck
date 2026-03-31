@@ -33,7 +33,7 @@ import ch.cyberduck.core.StringAppender;
 import ch.cyberduck.core.features.Location;
 import ch.cyberduck.core.resources.IconCacheFactory;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rococoa.Foundation;
@@ -44,7 +44,7 @@ import java.util.Set;
 
 public class VaultController extends FolderController {
 
-    private final VaultMetadata metadata;
+    private final VaultVersion metadata;
     private final Callback callback;
 
     @Outlet
@@ -60,7 +60,7 @@ public class VaultController extends FolderController {
     private final PasswordStrengthValidator passwordStrengthValidator = new PasswordStrengthValidator();
 
     public VaultController(final Path workdir, final Path selected, final Cache<Path> cache, final Set<Location.Name> regions,
-                           final Location.Name defaultRegion, final VaultMetadata metadata, final Callback callback) {
+                           final Location.Name defaultRegion, final VaultVersion metadata, final Callback callback) {
         super(workdir, selected, cache, regions, defaultRegion, new FolderController.Callback() {
             @Override
             public void callback(final Path folder, final String region) {

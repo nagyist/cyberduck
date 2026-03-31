@@ -57,7 +57,7 @@ import ch.cyberduck.core.transfer.UploadTransfer;
 import ch.cyberduck.core.transfer.upload.UploadFilterOptions;
 import ch.cyberduck.core.vault.DefaultVaultRegistry;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.core.worker.SingleTransferWorker;
 import ch.cyberduck.test.IntegrationTest;
 
@@ -104,7 +104,7 @@ public class CryptoSFTPSingleTransferWorkerTest extends AbstractSFTPTest {
         final OutputStream out2 = localFile2.getOutputStream(false);
         IOUtils.write(content, out2);
         out2.close();
-        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultMetadata(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         final DefaultVaultRegistry vaults = new DefaultVaultRegistry(new DisabledPasswordCallback() {
             @Override
             public Credentials prompt(final Host bookmark, final String title, final String reason, final LoginOptions options) {

@@ -27,9 +27,9 @@ import ch.cyberduck.core.exception.UnsupportedException;
 import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.preferences.HostPreferencesFactory;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultProvider;
 import ch.cyberduck.core.vault.VaultUnlockException;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,36 +51,36 @@ public class DefaultVaultProvider implements VaultProvider {
     /**
      * List of known metadata filenames.
      */
-    private final Map<String, VaultMetadata.Type> markers;
+    private final Map<String, VaultVersion.Type> markers;
 
     public DefaultVaultProvider(final Session<?> session) {
         this.markers = ImmutableMap.of(
-                HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.masterkey.filename"), VaultMetadata.Type.V8,
-                HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.config.filename.uvf"), VaultMetadata.Type.UVF
+                HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.masterkey.filename"), VaultVersion.Type.V8,
+                HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.config.filename.uvf"), VaultVersion.Type.UVF
         );
     }
 
     @Override
-    public VaultMetadata matches(final Path file) {
+    public VaultVersion matches(final Path file) {
         if(markers.keySet().stream().anyMatch(marker -> file.getName().equals(marker))) {
-            return new VaultMetadata(markers.get(file.getName()));
+            return new VaultVersion(markers.get(file.getName()));
         }
         return null;
     }
 
     @Override
-    public VaultMetadata find(final Path directory, final Find find, final ListProgressListener listener) throws BackgroundException {
+    public VaultVersion find(final Path directory, final Find find, final ListProgressListener listener) throws BackgroundException {
         for(String marker : markers.keySet()) {
             final Path m = new Path(directory, marker, EnumSet.of(Path.Type.file));
             if(find.find(m, listener)) {
-                return new VaultMetadata(markers.get(marker));
+                return new VaultVersion(markers.get(marker));
             }
         }
         return null;
     }
 
     @Override
-    public AbstractVault load(final Session<?> session, final Path directory, final VaultMetadata metadata, final VaultCredentials credentials) throws BackgroundException {
+    public AbstractVault load(final Session<?> session, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) throws BackgroundException {
         final AbstractVault vault;
         switch(metadata.type) {
             case V8:
@@ -106,7 +106,7 @@ public class DefaultVaultProvider implements VaultProvider {
     }
 
     @Override
-    public AbstractVault create(final Session<?> session, final String region, final Path directory, final VaultMetadata metadata, final VaultCredentials credentials) throws BackgroundException {
+    public AbstractVault create(final Session<?> session, final String region, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) throws BackgroundException {
         final AbstractVault vault;
         switch(metadata.type) {
             case V8:

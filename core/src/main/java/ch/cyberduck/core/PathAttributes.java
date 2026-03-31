@@ -22,7 +22,7 @@ import ch.cyberduck.core.features.Encryption;
 import ch.cyberduck.core.features.Quota;
 import ch.cyberduck.core.io.Checksum;
 import ch.cyberduck.core.serializer.Serializer;
-import ch.cyberduck.core.vault.VaultMetadata;
+import ch.cyberduck.core.vault.VaultVersion;
 
 import java.util.Map;
 
@@ -280,9 +280,9 @@ public interface PathAttributes extends Attributes, Serializable {
 
     PathAttributes setDecrypted(Path decrypted);
 
-    VaultMetadata getVaultMetadata();
+    VaultVersion getVaultMetadata();
 
-    PathAttributes setVaultMetadata(VaultMetadata vaultMetadata);
+    PathAttributes setVaultMetadata(VaultVersion vaultMetadata);
 
     /**
      * If the path should not be displayed in a browser by default unless the user explicitly chooses to show hidden

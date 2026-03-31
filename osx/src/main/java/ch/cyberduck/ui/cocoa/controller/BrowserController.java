@@ -87,8 +87,8 @@ import ch.cyberduck.core.transfer.TransferQueue;
 import ch.cyberduck.core.transfer.UploadTransfer;
 import ch.cyberduck.core.vault.RegistryVaultLoader;
 import ch.cyberduck.core.vault.VaultCredentials;
-import ch.cyberduck.core.vault.VaultMetadata;
 import ch.cyberduck.core.vault.VaultRegistry;
+import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.core.worker.CopyWorker;
 import ch.cyberduck.core.worker.CreateDirectoryWorker;
 import ch.cyberduck.core.worker.CreateSymlinkWorker;
@@ -2431,7 +2431,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
         final Location feature = pool.getFeature(Location.class);
         final Path selected = this.getSelectedPath();
         final Path workdir = this.getWorkdirFromSelection();
-        final VaultMetadata metadata = new VaultMetadata(VaultMetadata.Type.valueOf(preferences.getProperty("cryptomator.vault.default")));
+        final VaultVersion metadata = new VaultVersion(VaultVersion.Type.valueOf(preferences.getProperty("cryptomator.vault.default")));
         final AlertController sheet = new VaultController(workdir, selected, cache,
                 feature != null ? feature.getLocations(workdir) : Collections.emptySet(), feature != null ? feature.getDefault(workdir) : Location.unknown,
                 metadata, new VaultController.Callback() {
@@ -2469,7 +2469,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
             // Unlock vault
             this.background(new WorkerBackgroundAction<>(this, pool, new LoadVaultWorker(new RegistryVaultLoader(pool.getVaultRegistry(),
                     PasswordCallbackFactory.get(this)), directory,
-                    new VaultMetadata(VaultMetadata.Type.valueOf(preferences.getProperty("cryptomator.vault.default")))) {
+                    new VaultVersion(VaultVersion.Type.valueOf(preferences.getProperty("cryptomator.vault.default")))) {
                 @Override
                 public void cleanup(final Vault vault) {
                     if(vault != null) {
