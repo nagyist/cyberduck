@@ -18,9 +18,7 @@ package ch.cyberduck.core.cryptomator.features;
 import ch.cyberduck.core.ConnectionCallback;
 import ch.cyberduck.core.Local;
 import ch.cyberduck.core.Path;
-import ch.cyberduck.core.RandomStringService;
 import ch.cyberduck.core.Session;
-import ch.cyberduck.core.UUIDRandomStringService;
 import ch.cyberduck.core.cryptomator.AbstractVault;
 import ch.cyberduck.core.cryptomator.random.RandomNonceGenerator;
 import ch.cyberduck.core.cryptomator.random.RotatingNonceGenerator;
@@ -39,9 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CryptoBulkFeature<R> implements Bulk<R> {
-
-    private final RandomStringService random
-            = new UUIDRandomStringService();
 
     private final Session<?> session;
     private final Bulk<R> delegate;
