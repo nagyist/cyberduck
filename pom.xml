@@ -21,6 +21,7 @@
         <!-- Encryption-->
         <module>cryptomator</module>
         <module>cryptomator/dll</module>
+        <module>cryptomator/legacy</module>
         <!-- Native components -->
         <module>bonjour</module>
         <module>bonjour/dll</module>
