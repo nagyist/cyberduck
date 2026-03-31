@@ -16,6 +16,8 @@ package ch.cyberduck.core.cryptomator;
  */
 
 import ch.cyberduck.core.PathAttributes;
+import ch.cyberduck.core.exception.BackgroundException;
+import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.io.StreamCancelation;
 import ch.cyberduck.core.io.StreamProgress;
 import ch.cyberduck.core.transfer.ProxyTransferStatus;
@@ -27,9 +29,9 @@ import org.apache.logging.log4j.Logger;
 public class CryptoTransferStatus extends ProxyTransferStatus implements StreamCancelation, StreamProgress {
     private static final Logger log = LogManager.getLogger(CryptoTransferStatus.class);
 
-    private final AbstractVault vault;
+    private final Vault vault;
 
-    public CryptoTransferStatus(final AbstractVault vault, final TransferStatus proxy) {
+    public CryptoTransferStatus(final Vault vault, final TransferStatus proxy) {
         super(proxy);
         this.vault = vault;
         this.setLength(vault.toCiphertextSize(proxy.getOffset(), proxy.getLength()))
@@ -44,7 +46,7 @@ public class CryptoTransferStatus extends ProxyTransferStatus implements StreamC
             attributes.setSize(vault.toCleartextSize(0L, attributes.getSize()));
             super.setResponse(attributes);
         }
-        catch(CryptoInvalidFilesizeException e) {
+        catch(BackgroundException e) {
             log.warn("Failure {} translating file size from response {}", e, attributes);
         }
         return this;
