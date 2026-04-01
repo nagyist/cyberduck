@@ -46,6 +46,8 @@
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>legacy</shadedClassifierName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <createSourcesJar>true</createSourcesJar>
+                            <createTestSourcesJar>true</createTestSourcesJar>
                             <artifactSet>
                                 <includes>
                                     <include>ch.iterate.cryptomator:cryptolib</include>
