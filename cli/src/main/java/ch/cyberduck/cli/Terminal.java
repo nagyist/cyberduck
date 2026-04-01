@@ -50,7 +50,6 @@ import ch.cyberduck.core.transfer.TransferSpeedometer;
 import ch.cyberduck.core.vault.RegistryVaultLoader;
 import ch.cyberduck.core.vault.VaultRegistry;
 import ch.cyberduck.core.vault.VaultRegistryFactory;
-import ch.cyberduck.core.vault.VaultVersion;
 import ch.cyberduck.core.worker.AttributesWorker;
 import ch.cyberduck.core.worker.CreateDirectoryWorker;
 import ch.cyberduck.core.worker.DeleteWorker;
@@ -248,7 +247,7 @@ public class Terminal {
                 log.debug("Attempting to load vault from {}", vault);
                 try {
                     this.execute(new TerminalBackgroundAction<>(controller, source, new LoadVaultWorker(new RegistryVaultLoader(source.getVaultRegistry(),
-                            new TerminalPasswordCallback()), vault, new VaultVersion(VaultVersion.Type.valueOf(preferences.getProperty("cryptomator.vault.default"))))));
+                            new TerminalPasswordCallback()), vault)));
                 }
                 catch(TerminalBackgroundException e) {
                     return Exit.failure;

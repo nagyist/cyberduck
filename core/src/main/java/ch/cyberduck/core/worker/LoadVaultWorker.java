@@ -15,13 +15,16 @@ package ch.cyberduck.core.worker;
  * GNU General Public License for more details.
  */
 
+import ch.cyberduck.core.DisabledListProgressListener;
 import ch.cyberduck.core.LocaleFactory;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Session;
 import ch.cyberduck.core.exception.BackgroundException;
+import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.features.Vault;
 import ch.cyberduck.core.vault.VaultLoader;
-import ch.cyberduck.core.vault.VaultVersion;
+import ch.cyberduck.core.vault.VaultProvider;
+import ch.cyberduck.core.vault.VaultProviderFactory;
 
 import java.util.Objects;
 
@@ -29,17 +32,17 @@ public class LoadVaultWorker extends Worker<Vault> {
 
     private final VaultLoader loader;
     private final Path directory;
-    private final VaultVersion version;
 
-    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultVersion version) {
+    public LoadVaultWorker(final VaultLoader loader, final Path directory) {
         this.loader = loader;
         this.directory = directory;
-        this.version = version;
     }
 
     @Override
     public Vault run(final Session<?> session) throws BackgroundException {
-        return loader.load(session, directory, version);
+        final VaultProvider provider = VaultProviderFactory.get(session);
+        return loader.load(session, directory,
+                provider.find(directory, session.getFeature(Find.class), new DisabledListProgressListener()));
     }
 
     @Override
@@ -49,25 +52,24 @@ public class LoadVaultWorker extends Worker<Vault> {
 
     @Override
     public boolean equals(final Object o) {
-        if(this == o) {
-            return true;
-        }
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        final LoadVaultWorker that = (LoadVaultWorker) o;
-        return Objects.equals(version, that.version);
+
+        LoadVaultWorker that = (LoadVaultWorker) o;
+        return Objects.equals(directory, that.directory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version);
+        return Objects.hashCode(directory);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("LoadVaultWorker{");
-        sb.append("metadata=").append(version);
+        sb.append("loader=").append(loader);
+        sb.append(", directory=").append(directory);
         sb.append('}');
         return sb.toString();
     }

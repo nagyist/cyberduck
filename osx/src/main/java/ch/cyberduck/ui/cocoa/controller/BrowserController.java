@@ -2468,8 +2468,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
         else {
             // Unlock vault
             this.background(new WorkerBackgroundAction<>(this, pool, new LoadVaultWorker(new RegistryVaultLoader(pool.getVaultRegistry(),
-                    PasswordCallbackFactory.get(this)), directory,
-                    new VaultVersion(VaultVersion.Type.valueOf(preferences.getProperty("cryptomator.vault.default")))) {
+                    PasswordCallbackFactory.get(this)), directory) {
                 @Override
                 public void cleanup(final Vault vault) {
                     if(vault != null) {
