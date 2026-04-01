@@ -209,7 +209,7 @@ public class CryptomatorVault extends AbstractVault {
         if(encryption != null) {
             status.setEncryption(encryption.getDefault(home));
         }
-        final Path vault = directory.mkdir(session._getFeature(Write.class), home, status);
+        directory.mkdir(session._getFeature(Write.class), home, status);
         new ContentWriter(session).write(masterkeyPath, mkArray.toByteArray());
         // Create vaultconfig.cryptomator
         final Algorithm algorithm = Algorithm.HMAC256(mk.getEncoded());
@@ -233,13 +233,13 @@ public class CryptomatorVault extends AbstractVault {
 
     @Override
     public void load(final Session<?> session, final VaultMetadataProvider metadata) throws BackgroundException {
-        final VaultConfig vaultConfig = this.readVaultConfig(session);
+        final VaultConfig vaultConfig = readVaultConfig(session, masterkeyPath, config);
         this.unlock(vaultConfig, CredentialsVaultMetadataProvider.cast(metadata).getCredentials().getPassword());
     }
 
     protected PerpetualMasterkey unlock(final VaultConfig vaultConfig, final CharSequence passphrase) throws BackgroundException {
         try {
-            final PerpetualMasterkey masterKey = this.getMasterKey(vaultConfig.getMkfile(), passphrase);
+            final PerpetualMasterkey masterKey = getMasterKey(vaultConfig.getMkfile(), pepper, passphrase);
             this.open(vaultConfig, masterKey);
             return masterKey;
         }
@@ -248,41 +248,6 @@ public class CryptomatorVault extends AbstractVault {
         }
         catch(InvalidPassphraseException e) {
             throw new VaultUnlockException("Failure to decrypt master key file", e);
-        }
-    }
-
-    private CryptomatorVault.VaultConfig readVaultConfig(final Session<?> session) throws BackgroundException {
-        final MasterkeyFile masterkeyFile = this.readMasterkeyFile(session, masterkeyPath);
-        try {
-            return parseVaultConfigFromJWT(new ContentReader(session).read(config)).withMasterkeyFile(masterkeyFile);
-        }
-        catch(NotfoundException e) {
-            log.debug("Ignore failure reading vault configuration {}", config);
-            return parseVaultConfigFromMasterKey(masterkeyFile).withMasterkeyFile(masterkeyFile);
-        }
-    }
-
-    public static CryptomatorVault.VaultConfig parseVaultConfigFromJWT(final String token) {
-        final DecodedJWT decoded = JWT.decode(token);
-        return new CryptomatorVault.VaultConfig(
-                decoded.getClaim(JSON_KEY_VAULTVERSION).asInt(),
-                decoded.getClaim(JSON_KEY_SHORTENING_THRESHOLD).asInt(),
-                CryptorProvider.Scheme.valueOf(decoded.getClaim(JSON_KEY_CIPHERCONFIG).asString()),
-                decoded.getAlgorithm(), decoded);
-    }
-
-    private static VaultConfig parseVaultConfigFromMasterKey(final MasterkeyFile masterkeyFile) {
-        return new VaultConfig(masterkeyFile.version, CryptoFilenameV7Provider.DEFAULT_NAME_SHORTENING_THRESHOLD,
-                CryptorProvider.Scheme.SIV_CTRMAC, null, null);
-    }
-
-    private MasterkeyFile readMasterkeyFile(final Session<?> session, final Path file) throws BackgroundException {
-        log.debug("Read master key {}", file);
-        try(Reader reader = new ContentReader(session).getReader(file)) {
-            return MasterkeyFile.read(reader);
-        }
-        catch(JsonParseException | IllegalArgumentException | IllegalStateException | IOException e) {
-            throw new VaultException(String.format("Failure reading vault master key file %s", file.getName()), e).withFile(file);
         }
     }
 
@@ -300,7 +265,42 @@ public class CryptomatorVault extends AbstractVault {
         this.nonceSize = vaultConfig.getNonceSize();
     }
 
-    private PerpetualMasterkey getMasterKey(final MasterkeyFile masterkeyFile, final CharSequence passphrase) throws IOException {
+    private static CryptomatorVault.VaultConfig readVaultConfig(final Session<?> session, final Path masterkeyPath, final Path config) throws BackgroundException {
+        final MasterkeyFile masterkeyFile = readMasterkeyFile(session, masterkeyPath);
+        try {
+            return parseVaultConfigFromJWT(new ContentReader(session).read(config)).withMasterkeyFile(masterkeyFile);
+        }
+        catch(NotfoundException e) {
+            log.debug("Ignore failure reading vault configuration {}", config);
+            return parseVaultConfigFromMasterKey(masterkeyFile).withMasterkeyFile(masterkeyFile);
+        }
+    }
+
+    private static CryptomatorVault.VaultConfig parseVaultConfigFromJWT(final String token) {
+        final DecodedJWT decoded = JWT.decode(token);
+        return new CryptomatorVault.VaultConfig(
+                decoded.getClaim(JSON_KEY_VAULTVERSION).asInt(),
+                decoded.getClaim(JSON_KEY_SHORTENING_THRESHOLD).asInt(),
+                CryptorProvider.Scheme.valueOf(decoded.getClaim(JSON_KEY_CIPHERCONFIG).asString()),
+                decoded.getAlgorithm(), decoded);
+    }
+
+    private static VaultConfig parseVaultConfigFromMasterKey(final MasterkeyFile masterkeyFile) {
+        return new VaultConfig(masterkeyFile.version, CryptoFilenameV7Provider.DEFAULT_NAME_SHORTENING_THRESHOLD,
+                CryptorProvider.Scheme.SIV_CTRMAC, null, null);
+    }
+
+    private static MasterkeyFile readMasterkeyFile(final Session<?> session, final Path file) throws BackgroundException {
+        log.debug("Read master key {}", file);
+        try(Reader reader = new ContentReader(session).getReader(file)) {
+            return MasterkeyFile.read(reader);
+        }
+        catch(JsonParseException | IllegalArgumentException | IllegalStateException | IOException e) {
+            throw new VaultException(String.format("Failure reading vault master key file %s", file.getName()), e).withFile(file);
+        }
+    }
+
+    private static PerpetualMasterkey getMasterKey(final MasterkeyFile masterkeyFile, final byte[] pepper, final CharSequence passphrase) throws IOException {
         final StringWriter writer = new StringWriter();
         masterkeyFile.write(writer);
         return new MasterkeyFileAccess(pepper, FastSecureRandomProvider.get().provide()).load(
@@ -319,7 +319,6 @@ public class CryptomatorVault extends AbstractVault {
     }
 
     public static class VaultConfig {
-
         private final int version;
         private final int shorteningThreshold;
         private final CryptorProvider.Scheme cipherCombo;

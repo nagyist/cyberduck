@@ -15,7 +15,6 @@ package ch.cyberduck.core.cryptomator.features;
  * GNU General Public License for more details.
  */
 
-import ch.cyberduck.core.AbstractPath;
 import ch.cyberduck.core.DisabledListProgressListener;
 import ch.cyberduck.core.ListService;
 import ch.cyberduck.core.PasswordCallback;
@@ -64,7 +63,7 @@ public class CryptoDeleteFeature implements Delete, Trash {
                 final Path encrypt = vault.encrypt(session, f);
                 if(f.isDirectory()) {
                     final Path backup = new Path(encrypt, vault.getBackupDirectoryMetadataFilename(),
-                            EnumSet.of(AbstractPath.Type.file));
+                            EnumSet.of(Path.Type.file));
                     try {
                         log.debug("Deleting directory id backup file {}", backup);
                         proxy.delete(Collections.singletonList(backup), prompt, callback);

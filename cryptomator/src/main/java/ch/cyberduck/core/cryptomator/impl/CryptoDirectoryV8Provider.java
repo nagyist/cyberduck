@@ -15,7 +15,6 @@ package ch.cyberduck.core.cryptomator.impl;
  * GNU General Public License for more details.
  */
 
-import ch.cyberduck.core.AbstractPath;
 import ch.cyberduck.core.CacheReference;
 import ch.cyberduck.core.DefaultPathAttributes;
 import ch.cyberduck.core.Path;
@@ -150,8 +149,8 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
         if(file.attributes().getDirectoryId() != null) {
             return this.vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(file.attributes().getDirectoryId());
         }
-        final Path decrypted = file.getType().contains(AbstractPath.Type.encrypted) ? file.attributes().getDecrypted() : file;
-        return this.toDirectoryId(session, decrypted.getType().contains(AbstractPath.Type.file) ? decrypted.getParent() : decrypted);
+        final Path decrypted = file.getType().contains(Path.Type.encrypted) ? file.attributes().getDecrypted() : file;
+        return this.toDirectoryId(session, decrypted.getType().contains(Path.Type.file) ? decrypted.getParent() : decrypted);
     }
 
     @Override
