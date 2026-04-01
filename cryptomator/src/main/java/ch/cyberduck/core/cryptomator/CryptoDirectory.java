@@ -28,10 +28,10 @@ public interface CryptoDirectory {
     /**
      * Get encrypted filename for given clear text filename with id of parent encrypted directory.
      *
-     * @param session     Connection
-     * @param parent      Parent folder
-     * @param filename    Clear text filename
-     * @param type        File type
+     * @param session  Connection
+     * @param parent   Parent folder
+     * @param filename Clear text filename
+     * @param type     File type
      * @return Encrypted filename
      */
     String toEncrypted(Session<?> session, Path parent, String filename, EnumSet<Path.Type> type) throws BackgroundException;
@@ -53,5 +53,5 @@ public interface CryptoDirectory {
 
     DirectoryMetadata getDirectoryId(Session<?> session, Path directory) throws BackgroundException;
 
-    DirectoryMetadata createDirectoryId(final Path directory);
+    DirectoryMetadata createDirectoryId(Path directory);
 }
