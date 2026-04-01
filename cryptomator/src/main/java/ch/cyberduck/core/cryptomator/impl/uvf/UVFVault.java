@@ -202,11 +202,6 @@ public class UVFVault extends AbstractVault {
     }
 
     @Override
-    public String getRegularFileExtension() {
-        return REGULAR_FILE_EXTENSION;
-    }
-
-    @Override
     public String getDirectoryMetadataFilename() {
         return DIRECTORY_METADATA_FILENAME;
     }
