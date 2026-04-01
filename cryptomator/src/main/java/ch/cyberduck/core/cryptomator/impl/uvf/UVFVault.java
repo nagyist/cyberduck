@@ -79,7 +79,8 @@ public class UVFVault extends AbstractVault {
 
     public UVFVault(final Path home) {
         this.home = home;
-        this.masterkeyPath = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.config.filename.uvf"), EnumSet.of(Path.Type.file, Path.Type.vault));
+        this.masterkeyPath = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.config.filename.uvf"),
+                EnumSet.of(Path.Type.file, Path.Type.vaultmetadata));
     }
 
     @Override

@@ -59,7 +59,7 @@ public class PasswordVaultLoader implements VaultLoader {
                 String passphrase = keychain.getPassword(String.format("Cryptomator Passphrase (%s)", bookmark.getCredentials().getUsername()),
                         new DefaultUrlProvider(bookmark).toUrl(directory, EnumSet.of(DescriptiveUrl.Type.provider)).find(DescriptiveUrl.Type.provider).getUrl());
                 if(null == passphrase) {
-                    final Path masterKey = new Path(directory, HostPreferencesFactory.get(bookmark).getProperty("cryptomator.vault.masterkey.filename"), EnumSet.of(Path.Type.file, Path.Type.vault));
+                    final Path masterKey = new Path(directory, HostPreferencesFactory.get(bookmark).getProperty("cryptomator.vault.masterkey.filename"), EnumSet.of(Path.Type.file, Path.Type.vaultmetadata));
                     passphrase = keychain.getPassword(String.format("Cryptomator Passphrase (%s)", bookmark.getCredentials().getUsername()),
                             new DefaultUrlProvider(bookmark).toUrl(masterKey).find(DescriptiveUrl.Type.provider).getUrl());
                     if(null == passphrase) {

@@ -112,8 +112,10 @@ public class CryptomatorVault extends AbstractVault {
 
     public CryptomatorVault(final Path home) {
         this.home = home;
-        this.masterkeyPath = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.masterkey.filename"), EnumSet.of(Path.Type.file, Path.Type.vault));
-        this.config = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.config.filename"), EnumSet.of(Path.Type.file, Path.Type.vault));
+        this.masterkeyPath = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.masterkey.filename"),
+                EnumSet.of(Path.Type.file, Path.Type.vaultmetadata));
+        this.config = new Path(home, PreferencesFactory.get().getProperty("cryptomator.vault.config.filename"),
+                EnumSet.of(Path.Type.file, Path.Type.vaultmetadata));
         this.pepper = PreferencesFactory.get().getProperty("cryptomator.vault.pepper").getBytes(StandardCharsets.UTF_8);
     }
 
