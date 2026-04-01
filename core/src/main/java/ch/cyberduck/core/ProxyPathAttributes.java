@@ -187,13 +187,13 @@ public class ProxyPathAttributes implements PathAttributes {
     }
 
     @Override
-    public VaultVersion getVaultMetadata() {
-        return proxy.getVaultMetadata();
+    public VaultVersion getVaultVersion() {
+        return proxy.getVaultVersion();
     }
 
     @Override
-    public PathAttributes setVaultMetadata(final VaultVersion vaultMetadata) {
-        return proxy.setVaultMetadata(vaultMetadata);
+    public PathAttributes setVaultVersion(final VaultVersion version) {
+        return proxy.setVaultVersion(version);
     }
 
     @Override

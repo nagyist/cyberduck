@@ -280,9 +280,9 @@ public interface PathAttributes extends Attributes, Serializable {
 
     PathAttributes setDecrypted(Path decrypted);
 
-    VaultVersion getVaultMetadata();
+    VaultVersion getVaultVersion();
 
-    PathAttributes setVaultMetadata(VaultVersion vaultMetadata);
+    PathAttributes setVaultVersion(VaultVersion version);
 
     /**
      * If the path should not be displayed in a browser by default unless the user explicitly chooses to show hidden

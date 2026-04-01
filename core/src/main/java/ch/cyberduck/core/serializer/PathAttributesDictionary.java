@@ -117,7 +117,7 @@ public class PathAttributesDictionary<T> {
         attributes.setStorageClass(dict.stringForKey("Storage Class"));
         final T vaultMetadataObj = dict.objectForKey("Vault Metadata");
         if(vaultMetadataObj != null) {
-            attributes.setVaultMetadata(new VaultMetadataDictionary<>(factory).deserialize(vaultMetadataObj));
+            attributes.setVaultVersion(new VaultMetadataDictionary<>(factory).deserialize(vaultMetadataObj));
         }
         final Map<String, String> customObj = dict.mapForKey("Custom");
         if(customObj != null) {

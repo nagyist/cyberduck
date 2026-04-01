@@ -29,17 +29,17 @@ public class LoadVaultWorker extends Worker<Vault> {
 
     private final VaultLoader loader;
     private final Path directory;
-    private final VaultVersion metadata;
+    private final VaultVersion version;
 
-    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultVersion metadata) {
+    public LoadVaultWorker(final VaultLoader loader, final Path directory, final VaultVersion version) {
         this.loader = loader;
         this.directory = directory;
-        this.metadata = metadata;
+        this.version = version;
     }
 
     @Override
     public Vault run(final Session<?> session) throws BackgroundException {
-        return loader.load(session, directory, metadata);
+        return loader.load(session, directory, version);
     }
 
     @Override
@@ -56,18 +56,18 @@ public class LoadVaultWorker extends Worker<Vault> {
             return false;
         }
         final LoadVaultWorker that = (LoadVaultWorker) o;
-        return Objects.equals(metadata, that.metadata);
+        return Objects.equals(version, that.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata);
+        return Objects.hash(version);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("LoadVaultWorker{");
-        sb.append("metadata=").append(metadata);
+        sb.append("metadata=").append(version);
         sb.append('}');
         return sb.toString();
     }

@@ -308,7 +308,7 @@ public class CryptomatorVault extends AbstractVault {
     }
 
     @Override
-    public VaultVersion getMetadata() {
+    public VaultVersion getVersion() {
         return new VaultVersion(VaultVersion.Type.V8);
     }
 

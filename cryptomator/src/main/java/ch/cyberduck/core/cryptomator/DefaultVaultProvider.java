@@ -80,9 +80,9 @@ public class DefaultVaultProvider implements VaultProvider {
     }
 
     @Override
-    public AbstractVault load(final Session<?> session, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) throws BackgroundException {
+    public AbstractVault load(final Session<?> session, final Path directory, final VaultVersion version, final VaultCredentials credentials) throws BackgroundException {
         final AbstractVault vault;
-        switch(metadata.type) {
+        switch(version.type) {
             case V8:
                 vault = new CryptomatorVault(directory);
                 vault.load(session, new MasterkeyVaultMetadataProvider(credentials));
@@ -98,17 +98,17 @@ public class DefaultVaultProvider implements VaultProvider {
                 }
                 break;
             default:
-                log.error("Unknown vault type {}", metadata.type);
-                throw new UnsupportedException(metadata.type.toString());
+                log.error("Unknown vault type {}", version.type);
+                throw new UnsupportedException(version.type.toString());
         }
         log.debug("Read UVF metadata {}", vault.getMasterkeyPath());
         return vault;
     }
 
     @Override
-    public AbstractVault create(final Session<?> session, final String region, final Path directory, final VaultVersion metadata, final VaultCredentials credentials) throws BackgroundException {
+    public AbstractVault create(final Session<?> session, final String region, final Path directory, final VaultVersion version, final VaultCredentials credentials) throws BackgroundException {
         final AbstractVault vault;
-        switch(metadata.type) {
+        switch(version.type) {
             case V8:
                 vault = new CryptomatorVault(directory);
                 final MasterkeyVaultMetadataProvider masterkey = new MasterkeyVaultMetadataProvider(credentials);
@@ -119,8 +119,8 @@ public class DefaultVaultProvider implements VaultProvider {
                 vault.create(session, region, new DefaultUVFVaultMetadataProvider(credentials));
                 break;
             default:
-                log.error("Unknown vault type {}", metadata.type);
-                throw new UnsupportedException(metadata.type.toString());
+                log.error("Unknown vault type {}", version.type);
+                throw new UnsupportedException(version.type.toString());
         }
         return vault;
     }

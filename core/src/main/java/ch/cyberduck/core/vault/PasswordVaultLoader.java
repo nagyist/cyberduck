@@ -48,7 +48,7 @@ public class PasswordVaultLoader implements VaultLoader {
     }
 
     @Override
-    public Vault load(final Session<?> session, final Path directory, final VaultVersion metadata) throws VaultUnlockCancelException {
+    public Vault load(final Session<?> session, final Path directory, final VaultVersion version) throws VaultUnlockCancelException {
         synchronized(registry) {
             if(registry.contains(directory)) {
                 return registry.find(session, directory);
@@ -83,7 +83,7 @@ public class PasswordVaultLoader implements VaultLoader {
                 else {
                     credentials = new VaultCredentials(passphrase).setSaved(false);
                 }
-                return this.load(session, metadata, directory, credentials);
+                return this.load(session, version, directory, credentials);
             }
             catch(BackgroundException e) {
                 log.warn("Failure {} loading vault", e.getMessage());
@@ -92,10 +92,10 @@ public class PasswordVaultLoader implements VaultLoader {
         }
     }
 
-    private Vault load(final Session<?> session, final VaultVersion metadata, final Path directory, final VaultCredentials credentials) throws BackgroundException {
+    private Vault load(final Session<?> session, final VaultVersion version, final Path directory, final VaultCredentials credentials) throws BackgroundException {
         try {
             final VaultProvider provider = session.getFeature(VaultProvider.class);
-            final Vault vault = provider.load(session, directory, metadata, credentials);
+            final Vault vault = provider.load(session, directory, version, credentials);
             if(credentials.isSaved()) {
                 log.info("Save passphrase for {}", directory);
                 // Save password with hostname and path to masterkey.cryptomator in keychain
@@ -116,7 +116,7 @@ public class PasswordVaultLoader implements VaultLoader {
                             .anonymous(false)
                             .icon("cryptomator.tiff")
                             .passwordPlaceholder(LocaleFactory.localizedString("Passphrase", "Cryptomator"))).getPassword());
-            return this.load(session, metadata, directory, credentials);
+            return this.load(session, version, directory, credentials);
         }
         catch(BackgroundException e) {
             throw new VaultUnlockCancelException(directory, e);

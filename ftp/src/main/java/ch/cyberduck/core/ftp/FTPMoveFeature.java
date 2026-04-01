@@ -51,7 +51,7 @@ public class FTPMoveFeature implements Move {
                 throw new FTPException(session.getClient().getReplyCode(), session.getClient().getReplyString());
             }
             // Copy original file attributes
-            return new Path(renamed).withAttributes(new DefaultPathAttributes(file.attributes()).setVaultMetadata(null));
+            return new Path(renamed).withAttributes(new DefaultPathAttributes(file.attributes()).setVaultVersion(null));
         }
         catch(IOException e) {
             throw new FTPExceptionMappingService().map("Cannot rename {0}", e, file);

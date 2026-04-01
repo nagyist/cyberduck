@@ -97,7 +97,7 @@ public class DefaultVaultRegistry extends CopyOnWriteArraySet<Vault> implements 
             do {
                 if(directory.getType().contains(Path.Type.vault)) {
                     final VaultLoader listener = new RegistryVaultLoader(this, prompt);
-                    return listener.load(session, directory, file.attributes().getVaultMetadata());
+                    return listener.load(session, directory, file.attributes().getVaultVersion());
                 }
                 directory = directory.getParent();
             }

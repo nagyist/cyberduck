@@ -190,7 +190,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
         metadata = new HashMap<>(copy.getMetadata());
         custom = new HashMap<>(copy.getCustom());
         verdict = copy.getVerdict();
-        vaultMetadata = copy.getVaultMetadata();
+        vaultMetadata = copy.getVaultVersion();
         decrypted = copy.getDecrypted();
         directoryId = copy.getDirectoryId();
     }
@@ -525,13 +525,13 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
     }
 
     @Override
-    public VaultVersion getVaultMetadata() {
+    public VaultVersion getVaultVersion() {
         return vaultMetadata;
     }
 
     @Override
-    public PathAttributes setVaultMetadata(final VaultVersion vaultMetadata) {
-        this.vaultMetadata = vaultMetadata;
+    public PathAttributes setVaultVersion(final VaultVersion version) {
+        this.vaultMetadata = version;
         return this;
     }
 

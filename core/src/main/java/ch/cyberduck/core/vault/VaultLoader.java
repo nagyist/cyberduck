@@ -28,5 +28,5 @@ public interface VaultLoader {
      * @return The loaded vault instance.
      * @throws VaultUnlockCancelException If the vault unlock operation is canceled.
      */
-    Vault load(Session<?> session, Path directory, VaultVersion metadata) throws VaultUnlockCancelException;
+    Vault load(Session<?> session, Path directory, VaultVersion version) throws VaultUnlockCancelException;
 }

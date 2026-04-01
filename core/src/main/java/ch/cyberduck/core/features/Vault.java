@@ -101,7 +101,7 @@ public interface Vault {
      */
     Path getHome();
 
-    VaultVersion getMetadata();
+    VaultVersion getVersion();
 
     enum State {
         open,

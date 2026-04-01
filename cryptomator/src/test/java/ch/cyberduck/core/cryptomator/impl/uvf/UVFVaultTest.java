@@ -86,10 +86,10 @@ public class UVFVaultTest {
         assertNotSame(home, vault.encrypt(session, home));
         assertEquals(vault.encrypt(session, home), vault.encrypt(session, home));
         final Path directory = new Path(home, "dir", EnumSet.of(Path.Type.directory));
-        assertNull(directory.attributes().getVaultMetadata());
+        assertNull(directory.attributes().getVaultVersion());
         vault.getDirectoryProvider().createDirectoryId(directory);
-        assertEquals(VaultVersion.Type.UVF, vault.encrypt(session, directory).attributes().getVaultMetadata().type);
-        assertEquals(VaultVersion.Type.UVF, directory.attributes().getVaultMetadata().type);
+        assertEquals(VaultVersion.Type.UVF, vault.encrypt(session, directory).attributes().getVaultVersion().type);
+        assertEquals(VaultVersion.Type.UVF, directory.attributes().getVaultVersion().type);
         assertEquals(vault.encrypt(session, directory), vault.encrypt(session, directory));
         assertEquals(new Path(home, directory.getName(), EnumSet.of(Path.Type.directory, Path.Type.decrypted)), vault.decrypt(session, vault.encrypt(session, directory, true)));
         final Path placeholder = new Path(home, "placeholder", EnumSet.of(Path.Type.directory, Path.Type.placeholder));

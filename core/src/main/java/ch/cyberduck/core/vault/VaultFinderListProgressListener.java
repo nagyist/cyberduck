@@ -77,10 +77,10 @@ public class VaultFinderListProgressListener extends IndexedListProgressListener
 
     @Override
     public void visit(final AttributedList<Path> list, final int index, final Path file) throws ConnectionCanceledException {
-        final VaultVersion metadata = provider.matches(file);
-        if(metadata != null) {
+        final VaultVersion version = provider.matches(file);
+        if(version != null) {
             log.info("Found vault config or masterkey file {}", file);
-            final Vault vault = lookup.load(session, file.getParent(), metadata);
+            final Vault vault = lookup.load(session, file.getParent(), version);
             if(vault.equals(Vault.DISABLED)) {
                 return;
             }

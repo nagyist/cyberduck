@@ -72,7 +72,7 @@ public class GraphDirectoryFeatureTest extends AbstractOneDriveTest {
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final Path test = cryptomator.getFeature(session, Directory.class, new GraphDirectoryFeature(session, fileid)).mkdir(
                 cryptomator.getFeature(session, Write.class, new GraphWriteFeature(session, fileid)), new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory)), new TransferStatus());
-        assertNotNull(test.attributes().getVaultMetadata());
+        assertNotNull(test.attributes().getVaultVersion());
         final String id = test.attributes().getFileId();
         cryptomator.getFeature(session, Timestamp.class, new GraphTimestampFeature(session, fileid)).setTimestamp(test, 1772875587000L);
         // Assert both filename and file id matches
@@ -99,7 +99,7 @@ public class GraphDirectoryFeatureTest extends AbstractOneDriveTest {
         session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final Path test = cryptomator.getFeature(session, Directory.class, new GraphDirectoryFeature(session, fileid)).mkdir(
                 cryptomator.getFeature(session, Write.class, new GraphWriteFeature(session, fileid)), new Path(vault, new AlphanumericRandomStringService(130).random(), EnumSet.of(Path.Type.directory)), new TransferStatus());
-        assertNotNull(test.attributes().getVaultMetadata());
+        assertNotNull(test.attributes().getVaultVersion());
         final String id = test.attributes().getFileId();
         assertTrue(cryptomator.getFeature(session, Find.class, new GraphFindFeature(session, fileid)).find(test));
         assertTrue(cryptomator.getFeature(session, Find.class, new DefaultFindFeature(session)).find(test));

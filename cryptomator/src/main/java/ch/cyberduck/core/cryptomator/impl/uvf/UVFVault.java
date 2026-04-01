@@ -216,7 +216,7 @@ public class UVFVault extends AbstractVault {
     }
 
     @Override
-    public VaultVersion getMetadata() {
+    public VaultVersion getVersion() {
         return new VaultVersion(VaultVersion.Type.UVF);
     }
 

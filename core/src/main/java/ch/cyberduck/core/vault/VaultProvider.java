@@ -49,12 +49,12 @@ public interface VaultProvider {
      *
      * @param session   The session used for connecting to the storage backend.
      * @param directory The path to the directory containing the vault.
-     * @param metadata  The metadata describing the properties of the vault to be accessed.
+     * @param version  The metadata describing the properties of the vault to be accessed.
      * @return An instance of the vault associated with the specified inputs.
      * @throws UnsupportedException If the vault cannot be provided due to unsupported conditions.
      */
 
-    Vault load(Session<?> session, Path directory, VaultVersion metadata, VaultCredentials credentials) throws BackgroundException;
+    Vault load(Session<?> session, Path directory, VaultVersion version, VaultCredentials credentials) throws BackgroundException;
 
     /**
      * Creates a new vault in the specified directory with the provided credentials and metadata.
@@ -62,12 +62,12 @@ public interface VaultProvider {
      * @param session     The session used for connecting to the storage backend.
      * @param region      The region in which the vault should be created.
      * @param directory   The path to the directory where the vault will be created.
-     * @param metadata    The metadata describing the properties of the vault to be created.
+     * @param version    The metadata describing the properties of the vault to be created.
      * @param credentials The credentials required to authenticate and secure the vault.
      * @return An instance of the newly created vault.
      * @throws BackgroundException If an error occurs during the vault creation process.
      */
-    Vault create(Session<?> session, String region, Path directory, VaultVersion metadata, VaultCredentials credentials) throws BackgroundException;
+    Vault create(Session<?> session, String region, Path directory, VaultVersion version, VaultCredentials credentials) throws BackgroundException;
 
     VaultProvider DISABLED = new DisabledVaultProvider();
 }
