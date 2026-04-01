@@ -68,17 +68,12 @@
                             <artifactSet>
                                 <includes>
                                     <include>ch.iterate.cryptomator:cryptolib</include>
-                                    <include>org.cryptomator:siv-mode</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.cryptomator.cryptolib</pattern>
                                     <shadedPattern>ch.cyberduck.legacy.org.cryptomator.cryptolib</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.cryptomator.siv</pattern>
-                                    <shadedPattern>ch.cyberduck.legacy.org.cryptomator.siv</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
