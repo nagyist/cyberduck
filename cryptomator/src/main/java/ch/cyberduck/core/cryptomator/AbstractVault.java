@@ -171,9 +171,6 @@ public abstract class AbstractVault implements Vault {
         if(!file.getType().contains(Path.Type.encrypted)) {
             encrypted.attributes().setDecrypted(file);
         }
-        // Add reference for vault
-        file.attributes().setVaultVersion(this.getVersion());
-        encrypted.attributes().setVaultVersion(this.getVersion());
         return encrypted;
     }
 
@@ -214,8 +211,6 @@ public abstract class AbstractVault implements Vault {
                     // Translate file size
                     attributes.setSize(this.toCleartextSize(0L, file.attributes().getSize()));
                 }
-                // Add reference for vault
-                attributes.setVaultVersion(this.getVersion());
                 final EnumSet<Path.Type> type = EnumSet.copyOf(file.getType());
                 type.remove(this.isDirectory(inflated) ? Path.Type.file : Path.Type.directory);
                 type.add(this.isDirectory(inflated) ? Path.Type.directory : Path.Type.file);

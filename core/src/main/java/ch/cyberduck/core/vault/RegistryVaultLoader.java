@@ -43,6 +43,7 @@ public class RegistryVaultLoader implements VaultLoader {
             final EnumSet<Path.Type> type = directory.getType();
             type.add(Path.Type.vault);
             directory.setType(type);
+            directory.attributes().setVaultVersion(vault.getVersion());
         }
         return vault;
     }
