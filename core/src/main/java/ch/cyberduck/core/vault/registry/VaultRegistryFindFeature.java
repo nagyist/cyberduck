@@ -63,15 +63,12 @@ public class VaultRegistryFindFeature implements Find {
                         HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.config.filename"), EnumSet.of(Path.Type.file));
                 final Path key = new Path(directory,
                         HostPreferencesFactory.get(session.getHost()).getProperty("cryptomator.vault.masterkey.filename"), EnumSet.of(Path.Type.file));
-
                 final VaultVersion version = provider.find(directory, proxy, listener);
                 if(version != null) {
                     log.info("Found vault config {} or masterkey {}", vaultConfig, key);
                     try {
                         log.info("Found vault {}", directory);
-                        return lookup.load(session, directory, version)
-                                .getFeature(session, Find.class, proxy)
-                                .find(file, listener);
+                        return lookup.load(session, directory, version).getFeature(session, Find.class, proxy).find(file, listener);
                     }
                     catch(VaultUnlockCancelException e) {
                         // Continue
