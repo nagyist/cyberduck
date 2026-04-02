@@ -52,7 +52,6 @@ import ch.cyberduck.core.cryptomator.random.FastSecureRandomProvider;
 import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.exception.NotfoundException;
 import ch.cyberduck.core.features.*;
-import ch.cyberduck.core.preferences.Preferences;
 import ch.cyberduck.core.preferences.PreferencesFactory;
 import ch.cyberduck.core.shared.DefaultTouchFeature;
 import ch.cyberduck.core.transfer.TransferStatus;
@@ -126,7 +125,6 @@ public class CryptomatorVault implements Vault {
     private int vaultVersion;
     private int nonceSize;
 
-    private final Preferences preferences = PreferencesFactory.get();
     private Cryptor cryptor;
     private CryptorCache fileNameCryptor;
 
