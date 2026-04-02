@@ -191,7 +191,6 @@ public abstract class AbstractVault implements Vault {
             try {
                 //TODO lädt das recovery metadaten file anstatt normales
                 final DirectoryContentCryptor.Decrypting decrypting = this.getFilenameDecryptor(session, file);
-                //TODO hier hatten wir caching via CryptorCache
                 final String cleartextFilename = decrypting.decrypt(inflated.getName());
                 final PathAttributes attributes = new DefaultPathAttributes(file.attributes());
                 if(this.isDirectory(inflated)) {
