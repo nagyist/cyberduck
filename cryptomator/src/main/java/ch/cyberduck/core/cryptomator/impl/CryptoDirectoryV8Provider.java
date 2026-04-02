@@ -64,8 +64,8 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
     @Override
     public String toEncrypted(final Session<?> session, final Path parent, final String filename, final EnumSet<Path.Type> type) throws BackgroundException {
         final DirectoryMetadata dirMetadata = this.getDirectoryId(session, parent);
-        this.vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
-        final String ciphertextName = this.vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
+        vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
+        final String ciphertextName = vault.getCryptor().directoryContentCryptor().fileNameEncryptor(dirMetadata).encrypt(filename);
         log.debug("Encrypted filename {} to {}", filename, ciphertextName);
         return filenameProvider.deflate(session, ciphertextName);
     }
@@ -83,9 +83,9 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
             // Remember random directory metadata for use in vault
             final DirectoryMetadata dirMetadata = this.getDirectoryId(session, directory);
             log.debug("Use directory ID '{}' for folder {}", dirMetadata, directory);
-            attributes.setDirectoryId(this.vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata));
+            attributes.setDirectoryId(vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata));
             attributes.setDecrypted(directory);
-            final String dirPath = this.vault.getCryptor().directoryContentCryptor().dirPath(dirMetadata);
+            final String dirPath = vault.getCryptor().directoryContentCryptor().dirPath(dirMetadata);
             final String[] segments = StringUtils.split(dirPath, '/');
             // Intermediate directory
             final Path intermediate = new Path(dataRoot, segments[1], dataRoot.getType());
@@ -100,12 +100,12 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
 
     protected DirectoryMetadata toDirectoryId(final Session<?> session, final Path directory) throws BackgroundException {
         if(new SimplePathPredicate(home).test(directory)) {
-            return this.vault.getRootDirId();
+            return vault.getRootDirId();
         }
         lock.readLock().lock();
         try {
             if(cache.contains(new SimplePathPredicate(directory))) {
-                return this.vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(cache.get(new SimplePathPredicate(directory)));
+                return vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(cache.get(new SimplePathPredicate(directory)));
             }
         }
         finally {
@@ -115,7 +115,7 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
             log.debug("Acquire lock for {}", directory);
             lock.writeLock().lock();
             final DirectoryMetadata id = this.load(session, directory);
-            cache.put(new SimplePathPredicate(directory), this.vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(id));
+            cache.put(new SimplePathPredicate(directory), vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(id));
             return id;
         }
         finally {
@@ -147,7 +147,7 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
     @Override
     public DirectoryMetadata getDirectoryId(final Session<?> session, final Path file) throws BackgroundException {
         if(file.attributes().getDirectoryId() != null) {
-            return this.vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(file.attributes().getDirectoryId());
+            return vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(file.attributes().getDirectoryId());
         }
         final Path decrypted = file.getType().contains(Path.Type.encrypted) ? file.attributes().getDecrypted() : file;
         return this.toDirectoryId(session, decrypted.getType().contains(Path.Type.file) ? decrypted.getParent() : decrypted);

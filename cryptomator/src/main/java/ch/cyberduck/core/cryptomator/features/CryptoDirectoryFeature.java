@@ -55,7 +55,7 @@ public class CryptoDirectoryFeature<Reply> implements Directory<Reply> {
                 vault.getDirectoryMetadataFilename(),
                 EnumSet.of(Path.Type.file));
         log.debug("Write metadata {} for folder {}", directoryMetadataFile, folder);
-        final byte[] encryptedMetadata = this.vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata);
+        final byte[] encryptedMetadata = vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata);
         directoryMetadataFile.setAttributes(new ContentWriter(session).write(directoryMetadataFile, encryptedMetadata, new TransferStatus()));
         final Path encrypt = vault.encrypt(session, folder, false);
         final Path intermediate = encrypt.getParent();
@@ -67,7 +67,7 @@ public class CryptoDirectoryFeature<Reply> implements Directory<Reply> {
                 vault.getBackupDirectoryMetadataFilename(),
                 EnumSet.of(Path.Type.file));
         log.debug("Write recovery metadata {} for folder {}", recoveryDirectoryMetadataFile, folder);
-        new ContentWriter(session).write(recoveryDirectoryMetadataFile, this.vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata));
+        new ContentWriter(session).write(recoveryDirectoryMetadataFile, vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(dirMetadata));
         // Implementation may return new copy of attributes without encryption attributes
         target.attributes().setDirectoryId(encryptedMetadata);
         target.attributes().setDecrypted(folder);
