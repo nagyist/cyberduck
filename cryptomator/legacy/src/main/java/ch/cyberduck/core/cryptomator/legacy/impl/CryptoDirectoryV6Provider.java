@@ -141,13 +141,18 @@ public class CryptoDirectoryV6Provider implements CryptoDirectory {
     }
 
     protected byte[] load(final Session<?> session, final Path directory) throws BackgroundException {
-        final Path parent = this.toEncrypted(session, directory.getParent().attributes().getDirectoryId(), directory.getParent());
-        final String cleartextName = directory.getName();
-        final String ciphertextName = this.toEncrypted(session, parent.attributes().getDirectoryId(), cleartextName, EnumSet.of(Path.Type.directory));
-        // Read directory id from file
-        log.debug("Read directory ID for folder {} from {}", directory, ciphertextName);
-        final Path metadataFile = new Path(parent, ciphertextName, EnumSet.of(Path.Type.file, Path.Type.encrypted));
-        return new ContentReader(session).readBytes(metadataFile);
+        try {
+            final Path parent = this.toEncrypted(session, directory.getParent().attributes().getDirectoryId(), directory.getParent());
+            final String cleartextName = directory.getName();
+            final String ciphertextName = this.toEncrypted(session, parent.attributes().getDirectoryId(), cleartextName, EnumSet.of(Path.Type.directory));
+            // Read directory id from file
+            log.debug("Read directory ID for folder {} from {}", directory, ciphertextName);
+            final Path metadataFile = new Path(parent, ciphertextName, EnumSet.of(Path.Type.file, Path.Type.encrypted));
+            return new ContentReader(session).readBytes(metadataFile);
+        }
+        catch(NotfoundException e) {
+            return this.createDirectoryId(directory);
+        }
     }
 
     public void delete(final Path directory) {
