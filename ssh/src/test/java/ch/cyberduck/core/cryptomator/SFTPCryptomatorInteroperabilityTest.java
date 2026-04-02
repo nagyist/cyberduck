@@ -84,7 +84,7 @@ public class SFTPCryptomatorInteroperabilityTest {
 
         unzipTestVault("/testvault.zip", tempDir.toString());
 
-        //TODO wieder auf cryptofs wechseln, sobald cryptofs neue cryptolib nutzt
+        //TODO switch back to cryptofs based testing as soon as cryptofs is based on new cryptolib
         /*
         final java.nio.file.Path vault = tempDir.resolve("vault");
         Files.createDirectory(vault);
