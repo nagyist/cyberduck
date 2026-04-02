@@ -43,6 +43,8 @@ public interface CryptoDirectory {
      */
     Path toEncrypted(Session<?> session, byte[] directoryId, Path directory) throws BackgroundException;
 
+    byte[] createDirectoryId(Path directory);
+
     /**
      * Remove from cache
      */

@@ -21,6 +21,7 @@ import ch.cyberduck.core.Path;
 import ch.cyberduck.core.PathAttributes;
 import ch.cyberduck.core.Session;
 import ch.cyberduck.core.SimplePathPredicate;
+import ch.cyberduck.core.UUIDRandomStringService;
 import ch.cyberduck.core.cache.LRUCache;
 import ch.cyberduck.core.cryptomator.ContentReader;
 import ch.cyberduck.core.cryptomator.legacy.CryptoDirectory;
@@ -120,6 +121,19 @@ public class CryptoDirectoryV6Provider implements CryptoDirectory {
             final byte[] id = null == directoryId ? this.load(session, directory) : directoryId;
             cache.put(new SimplePathPredicate(directory), id);
             return id;
+        }
+        finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public byte[] createDirectoryId(final Path directory) {
+        lock.writeLock().lock();
+        try {
+            final byte[] directoryId = new UUIDRandomStringService().random().getBytes(StandardCharsets.US_ASCII);
+            cache.put(new SimplePathPredicate(directory), directoryId);
+            return directoryId;
         }
         finally {
             lock.writeLock().unlock();

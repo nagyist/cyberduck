@@ -17,7 +17,6 @@ package ch.cyberduck.core.cryptomator.legacy.features;
 
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Session;
-import ch.cyberduck.core.UUIDRandomStringService;
 import ch.cyberduck.core.cryptomator.ContentWriter;
 import ch.cyberduck.core.cryptomator.legacy.CryptomatorVault;
 import ch.cyberduck.core.exception.BackgroundException;
@@ -28,8 +27,6 @@ import ch.cyberduck.core.transfer.TransferStatus;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.nio.charset.StandardCharsets;
 
 public class CryptoDirectoryV6Feature<Reply> implements Directory<Reply> {
     private static final Logger log = LogManager.getLogger(CryptoDirectoryV6Feature.class);
@@ -46,7 +43,7 @@ public class CryptoDirectoryV6Feature<Reply> implements Directory<Reply> {
 
     @Override
     public Path mkdir(final Write<Reply> writer, final Path folder, final TransferStatus status) throws BackgroundException {
-        final byte[] directoryId = new UUIDRandomStringService().random().getBytes(StandardCharsets.US_ASCII);
+        final byte[] directoryId = cryptomator.getDirectoryProvider().createDirectoryId(folder);
         final Path encrypt = cryptomator.encrypt(session, folder, directoryId, false);
         // Create metadata file for directory
         final Path directoryMetadataFile = cryptomator.encrypt(session, folder, true);

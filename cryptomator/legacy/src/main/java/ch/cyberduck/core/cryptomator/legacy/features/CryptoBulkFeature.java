@@ -19,7 +19,6 @@ import ch.cyberduck.core.ConnectionCallback;
 import ch.cyberduck.core.Local;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Session;
-import ch.cyberduck.core.UUIDRandomStringService;
 import ch.cyberduck.core.cryptomator.legacy.CryptomatorVault;
 import ch.cyberduck.core.cryptomator.random.RandomNonceGenerator;
 import ch.cyberduck.core.cryptomator.random.RotatingNonceGenerator;
@@ -32,7 +31,6 @@ import ch.cyberduck.core.transfer.download.PathPriorityComparator;
 
 import org.cryptomator.cryptolib.api.FileHeader;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -83,7 +81,7 @@ public class CryptoBulkFeature<R> implements Bulk<R> {
                     switch(type) {
                         case upload:
                             // Preset directory ID for new folders to avert lookup with not found failure in directory ID provider
-                            final byte[] directoryId = new UUIDRandomStringService().random().getBytes(StandardCharsets.US_ASCII);
+                            final byte[] directoryId = cryptomator.getDirectoryProvider().createDirectoryId(file);
                             encrypted.put(new TransferItem(cryptomator.encrypt(session, file, directoryId, false), local), status);
                             break;
                         default:
