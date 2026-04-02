@@ -189,7 +189,6 @@ public abstract class AbstractVault implements Vault {
         final Matcher m = pattern.matcher(inflated.getName());
         if(m.matches()) {
             try {
-                //TODO lädt das recovery metadaten file anstatt normales
                 final DirectoryContentCryptor.Decrypting decrypting = this.getFilenameDecryptor(session, file);
                 final String cleartextFilename = decrypting.decrypt(inflated.getName());
                 final PathAttributes attributes = new DefaultPathAttributes(file.attributes());
