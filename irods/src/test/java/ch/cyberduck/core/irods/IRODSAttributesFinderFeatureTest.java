@@ -80,7 +80,8 @@ public class IRODSAttributesFinderFeatureTest extends IRODSDockerComposeManager 
         assertEquals(folderTimestamp, f.find(folder).getModificationDate());
         final PathAttributes attributes = f.find(test);
         assertEquals(0L, attributes.getSize());
-        new IRODSDeleteFeature(session).delete(Collections.singletonList(test), LoginCallback.noop, new Delete.DisabledCallback());
+        new IRODSDeleteFeature(session).delete(Collections.singletonList(folder), LoginCallback.noop, new Delete.DisabledCallback());
+        assertFalse(new IRODSFindFeature(session).find(folder));
         assertFalse(new IRODSFindFeature(session).find(test));
         session.close();
     }
