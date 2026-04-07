@@ -41,6 +41,7 @@ public class LockVaultWorker extends Worker<Path> {
             final EnumSet<Path.Type> type = directory.getType();
             type.remove(Path.Type.vault);
             directory.setType(type);
+            directory.attributes().setVaultVersion(null);
         }
         return directory;
     }

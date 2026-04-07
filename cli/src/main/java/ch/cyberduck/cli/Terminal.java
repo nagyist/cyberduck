@@ -47,7 +47,7 @@ import ch.cyberduck.core.transfer.TransferItem;
 import ch.cyberduck.core.transfer.TransferOptions;
 import ch.cyberduck.core.transfer.TransferPrompt;
 import ch.cyberduck.core.transfer.TransferSpeedometer;
-import ch.cyberduck.core.vault.LoadingVaultLookupListener;
+import ch.cyberduck.core.vault.RegistryVaultLoader;
 import ch.cyberduck.core.vault.VaultRegistry;
 import ch.cyberduck.core.vault.VaultRegistryFactory;
 import ch.cyberduck.core.worker.AttributesWorker;
@@ -246,7 +246,7 @@ public class Terminal {
                 }
                 log.debug("Attempting to load vault from {}", vault);
                 try {
-                    this.execute(new TerminalBackgroundAction<>(controller, source, new LoadVaultWorker(new LoadingVaultLookupListener(source.getVaultRegistry(),
+                    this.execute(new TerminalBackgroundAction<>(controller, source, new LoadVaultWorker(new RegistryVaultLoader(source.getVaultRegistry(),
                             new TerminalPasswordCallback()), vault)));
                 }
                 catch(TerminalBackgroundException e) {
