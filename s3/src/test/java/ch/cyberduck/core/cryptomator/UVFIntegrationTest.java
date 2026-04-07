@@ -68,7 +68,6 @@ import java.util.stream.Stream;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEObjectJSON;
-import com.nimbusds.jose.crypto.MultiDecrypter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 
@@ -169,8 +168,6 @@ public class UVFIntegrationTest {
                 final PathAttributes attr = storage.getFeature(AttributesFinder.class).find(vault.getHome());
                 storage.withRegistry(vaults);
 
-                final JWK jwk = JWK.parse(memberKey);
-                jweObject.decrypt(new MultiDecrypter(jwk, Collections.singleton("uvf.spec.version")));
                 try(final UVFMasterkey masterKey = UVFMasterkey.fromDecryptedPayload(jweObject.getPayload().toString())) {
                     assertArrayEquals(masterKey.rootDirId(), vault.getMasterkey().rootDirId());
                 }

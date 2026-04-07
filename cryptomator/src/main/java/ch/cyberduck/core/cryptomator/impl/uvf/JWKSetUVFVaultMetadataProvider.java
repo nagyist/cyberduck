@@ -90,6 +90,6 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
         catch(JOSEException e) {
             throw new VaultException("Failure decrypting metadata", e);
         }
-        return metadata.serializeGeneral().getBytes(StandardCharsets.US_ASCII);
+        return metadata.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
     }
 }
