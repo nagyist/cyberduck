@@ -59,9 +59,8 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     public byte[] encrypt() throws VaultException {
         try {
             switch(metadata.getState()) {
-                // The JWE object must be in an encrypted or decrypted state
+                // The JWE object must be in an unencrypted
                 case UNENCRYPTED:
-                case DECRYPTED:
                     metadata.encrypt(new MultiEncrypter(jwk));
                     break;
             }
