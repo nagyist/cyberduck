@@ -101,6 +101,15 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     }
 
     private static Payload decrypt(final JWEObjectJSON jwe, final JWK key) throws VaultException {
+        final Object uvfSpecVersion = jwe.getHeader().getCustomParams().get(UVF_SPEC_VERSION_KEY_PARAM);
+        if(null == uvfSpecVersion) {
+            throw new VaultException(String.format("Mmissing value for critical header %s",
+                    UVF_SPEC_VERSION_KEY_PARAM));
+        }
+        if(1 != Integer.parseInt(uvfSpecVersion.toString())) {
+            throw new VaultException(String.format("Unexpected value \"%s\" for critical header %s. Expected \"1\"",
+                    UVF_SPEC_VERSION_KEY_PARAM, uvfSpecVersion));
+        }
         try {
             jwe.decrypt(new MultiDecrypter(key, Collections.singleton(UVF_SPEC_VERSION_KEY_PARAM)));
             return jwe.getPayload();
