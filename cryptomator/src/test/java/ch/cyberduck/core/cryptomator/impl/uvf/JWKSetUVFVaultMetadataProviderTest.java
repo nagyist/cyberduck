@@ -15,6 +15,7 @@ package ch.cyberduck.core.cryptomator.impl.uvf;
  * GNU General Public License for more details.
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,7 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class JWKSetUVFVaultMetadataProviderTest {
 
@@ -34,41 +36,46 @@ public class JWKSetUVFVaultMetadataProviderTest {
 
     @Test
     public void testMultiDecrypt() throws Exception {
-        final String jwe = "{\n" +
-                "  \"ciphertext\": \"eQ2THqVXAK58w_hEaJhjlEOWSO4CDYQnle4mEDb50qSoVsZ8JnKd3wCrhxrjQPzz_T9eIej_eZH8FZ9h6PWUSeraOr5GHiQ_UjRqrRQEHSFRf3OBHFv2vHMljDzR5CDsLtzEcsW07zlAvgTns8D1P9uAFzjcttMcDxHjbywSwySH1v8ZS4mcCmh5AyF1RdzxZaj3hH7n7Aga6rUuPV6kYQu18AZS0OB97mtXpNRjI5is5zefr_Jc5jal1gux6KZ_wvBbmVFde34cVFKyvBHIbRVMvoN-yFTXY0voDw1uOrOOR4u6Bbyy7Xt4UwdrLXlsC97m-XBD6ntZVgfSXY088m7m8Zfr0bHEdU2QlaO4TR-QAKwZV9Pc93vyl9WXlVzrc2eYE3ahl8D8jG8BSMVMu5AiMZBZHOwpg1LCydccZIIby8STTfu4lxfHhqRB1T3Sn-96ys_5VC2ljlsFXr2kZhHXePr3V6TgXJEYtom0C0pnJJOGZ4D1tuV1ATP7HjCl1ZJYjFUXSMDC36QlB_yPbgjV4_yulLMRaRLohazSgOG_Rqp2pYlsZEXsrXIgnJvjmH5XaJS253tioes66swH5med6LY4RddcklZAUgNUwgA6Hrz8gSgeDHNxcZpv3UJtbUVF6i5i_k0b0VfAbH7HhZwE8zfuyaEPhNQeHFCNtP8Cx5Fzmo_BDpDevWhhBsPqg0C4klnBgRJoIrSFOwC2lgDgOU1HqY9D2nIIGB6ydE42e_olx64OF9ejcT8\",\n" +
-                "  \"protected\": \"eyJ1dmYuc3BlYy52ZXJzaW9uIjoxLCJjdHkiOiJqc29uIiwiZW5jIjoiQTI1NkdDTSIsImNyaXQiOlsidXZmLnNwZWMudmVyc2lvbiJdLCJqa3UiOiJqd2tzLmpzb24iLCJjbG91ZC5rYXR0YS5vcmlnaW4iOiJodHRwczovL2V4YW1wbGUuY29tL2dhdGV3YXkvYXBpL3ZhdWx0cy9jZTFjMDAyZC01ZTQ4LTQ4MzktOTFhYy05ZDU4NmRmY2EyODAvdXZmL3ZhdWx0LnV2ZiJ9\",\n" +
-                "  \"recipients\":\n" +
-                "    [\n" +
-                "      {\n" +
-                "        \"encrypted_key\": \"8D5sicCjOKxZg7s-YhcgBKD2SS5I8vYndoJ-n6QTgZVbR9kKKLF14w\",\n" +
-                "        \"header\": { \"alg\": \"A256KW\", \"kid\": \"org.cryptomator.hub.memberkey\" }\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"encrypted_key\": \"JV7oU02ZNRRE3vBCr5Y4xLxj5FbSvHRJtl4mRCPdq_XvK-M4cO06HQ\",\n" +
-                "        \"header\":\n" +
-                "          {\n" +
-                "            \"epk\":\n" +
-                "              {\n" +
-                "                \"kty\": \"EC\",\n" +
-                "                \"crv\": \"P-384\",\n" +
-                "                \"x\": \"R5RmzCeRY9W1Ppne5qzI6LmngOqXn_AWDFecgjM7Czj-LcISnr5-bGakgrG6Tzwq\",\n" +
-                "                \"y\": \"u82mFKUdm1tIHR9Odcy61m4OG0okOV22cgTjAxaxKpMdgydLwQgLCFEhO-AsKJ_Q\"\n" +
-                "              },\n" +
-                "            \"alg\": \"ECDH-ES+A256KW\",\n" +
-                "            \"kid\": \"org.cryptomator.hub.recoverykey.Dt9mG3_scsyFbHMo3gEIpsEuseYOVSYnPFp33Wy84f0\"\n" +
-                "          }\n" +
-                "      }\n" +
-                "    ],\n" +
-                "  \"tag\": \"74MqMasCFF6I35662Ta8Lw\",\n" +
-                "  \"iv\": \"Tj-UdKHo6at0uJ89\"\n" +
-                "}\n";
+        final String jwe = "{" +
+                "  \"ciphertext\": \"eQ2THqVXAK58w_hEaJhjlEOWSO4CDYQnle4mEDb50qSoVsZ8JnKd3wCrhxrjQPzz_T9eIej_eZH8FZ9h6PWUSeraOr5GHiQ_UjRqrRQEHSFRf3OBHFv2vHMljDzR5CDsLtzEcsW07zlAvgTns8D1P9uAFzjcttMcDxHjbywSwySH1v8ZS4mcCmh5AyF1RdzxZaj3hH7n7Aga6rUuPV6kYQu18AZS0OB97mtXpNRjI5is5zefr_Jc5jal1gux6KZ_wvBbmVFde34cVFKyvBHIbRVMvoN-yFTXY0voDw1uOrOOR4u6Bbyy7Xt4UwdrLXlsC97m-XBD6ntZVgfSXY088m7m8Zfr0bHEdU2QlaO4TR-QAKwZV9Pc93vyl9WXlVzrc2eYE3ahl8D8jG8BSMVMu5AiMZBZHOwpg1LCydccZIIby8STTfu4lxfHhqRB1T3Sn-96ys_5VC2ljlsFXr2kZhHXePr3V6TgXJEYtom0C0pnJJOGZ4D1tuV1ATP7HjCl1ZJYjFUXSMDC36QlB_yPbgjV4_yulLMRaRLohazSgOG_Rqp2pYlsZEXsrXIgnJvjmH5XaJS253tioes66swH5med6LY4RddcklZAUgNUwgA6Hrz8gSgeDHNxcZpv3UJtbUVF6i5i_k0b0VfAbH7HhZwE8zfuyaEPhNQeHFCNtP8Cx5Fzmo_BDpDevWhhBsPqg0C4klnBgRJoIrSFOwC2lgDgOU1HqY9D2nIIGB6ydE42e_olx64OF9ejcT8\"," +
+                "  \"protected\": \"eyJ1dmYuc3BlYy52ZXJzaW9uIjoxLCJjdHkiOiJqc29uIiwiZW5jIjoiQTI1NkdDTSIsImNyaXQiOlsidXZmLnNwZWMudmVyc2lvbiJdLCJqa3UiOiJqd2tzLmpzb24iLCJjbG91ZC5rYXR0YS5vcmlnaW4iOiJodHRwczovL2V4YW1wbGUuY29tL2dhdGV3YXkvYXBpL3ZhdWx0cy9jZTFjMDAyZC01ZTQ4LTQ4MzktOTFhYy05ZDU4NmRmY2EyODAvdXZmL3ZhdWx0LnV2ZiJ9\"," +
+                "  \"recipients\":" +
+                "    [" +
+                "      {" +
+                "        \"encrypted_key\": \"8D5sicCjOKxZg7s-YhcgBKD2SS5I8vYndoJ-n6QTgZVbR9kKKLF14w\"," +
+                "        \"header\": { \"alg\": \"A256KW\", \"kid\": \"org.cryptomator.hub.memberkey\" }" +
+                "      }," +
+                "      {" +
+                "        \"encrypted_key\": \"JV7oU02ZNRRE3vBCr5Y4xLxj5FbSvHRJtl4mRCPdq_XvK-M4cO06HQ\"," +
+                "        \"header\":" +
+                "          {" +
+                "            \"epk\":" +
+                "              {" +
+                "                \"kty\": \"EC\"," +
+                "                \"crv\": \"P-384\"," +
+                "                \"x\": \"R5RmzCeRY9W1Ppne5qzI6LmngOqXn_AWDFecgjM7Czj-LcISnr5-bGakgrG6Tzwq\"," +
+                "                \"y\": \"u82mFKUdm1tIHR9Odcy61m4OG0okOV22cgTjAxaxKpMdgydLwQgLCFEhO-AsKJ_Q\"" +
+                "              }," +
+                "            \"alg\": \"ECDH-ES+A256KW\"," +
+                "            \"kid\": \"org.cryptomator.hub.recoverykey.Dt9mG3_scsyFbHMo3gEIpsEuseYOVSYnPFp33Wy84f0\"" +
+                "          }" +
+                "      }" +
+                "    ]," +
+                "  \"tag\": \"74MqMasCFF6I35662Ta8Lw\"," +
+                "  \"iv\": \"Tj-UdKHo6at0uJ89\"" +
+                "}";
 
         final JWEObjectJSON jweObject = JWEObjectJSON.parse(jwe);
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObject, new JWKSet(JWK.parse(memberKey)));
         final byte[] b1 = provider.decrypt();
-        final byte[] b2 = provider.decrypt();
-        assertArrayEquals(b1, b2);
+        assertArrayEquals(b1, provider.decrypt());
+        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
+        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
+        assertArrayEquals(b1, provider.decrypt());
+        assertArrayEquals(b1, provider.decrypt());
+        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
     }
+
 
     @Test
     public void testAlreadyUnencrypted() throws Exception {
@@ -113,5 +120,8 @@ public class JWKSetUVFVaultMetadataProviderTest {
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObjectJSON, new JWKSet(JWK.parse(memberKey)));
         final byte[] b2 = provider.decrypt();
         assertArrayEquals(b1, b2);
+        assertArrayEquals(b1, provider.decrypt());
+        provider.encrypt();
+        assertArrayEquals(b1, provider.decrypt());
     }
 }
