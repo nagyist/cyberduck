@@ -108,8 +108,6 @@ public class DefaultUVFVaultMetadataProvider implements UVFVaultMetadataProvider
     public byte[] decrypt() throws VaultException {
         try {
             switch(metadata.getState()) {
-                case UNENCRYPTED:
-                    return metadata.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
                 case ENCRYPTED:
                     metadata.decrypt(new PasswordBasedDecrypter(passphrase.getPassword().getBytes(StandardCharsets.UTF_8), Collections.singleton(UVF_SPEC_VERSION_KEY_PARAM)));
                     break;
