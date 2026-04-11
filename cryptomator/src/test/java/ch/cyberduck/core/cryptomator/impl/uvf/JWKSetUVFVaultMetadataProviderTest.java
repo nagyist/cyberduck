@@ -107,7 +107,7 @@ public class JWKSetUVFVaultMetadataProviderTest {
                 "    \"cloud.katta.storage\": {\n" +
                 "        \"provider\": \"9ae9fe69-e99e-4f3b-a7c1-7a44f2f9a6a0\",\n" +
                 "        \"defaultPath\": \"katta-test-9a3ae044-f24a-47ff-a07c-0feeb86b447a\",\n" +
-                "        \"nickname\": \"KattaWebVault\",\n" +
+                "        \"nickname\": \"KattaWébVault\",\n" +
                 "        \"region\": \"eu-west-1\",\n" +
                 "        \"username\": null,\n" +
                 "        \"password\": null\n" +

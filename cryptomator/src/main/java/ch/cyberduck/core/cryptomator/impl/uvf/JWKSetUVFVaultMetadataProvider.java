@@ -97,7 +97,7 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
             }
             payload = decrypt(metadata, key.get());
         }
-        return payload.toString().getBytes(StandardCharsets.US_ASCII);
+        return payload.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     private static Payload decrypt(final JWEObjectJSON jwe, final JWK key) throws VaultException {
