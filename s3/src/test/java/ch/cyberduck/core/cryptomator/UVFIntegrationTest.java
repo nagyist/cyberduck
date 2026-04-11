@@ -83,7 +83,6 @@ public class UVFIntegrationTest {
     private static final ComposeContainer container = new ComposeContainer(
             new File(AbstractAssumeRoleWithWebIdentityTest.class.getResource("/uvf/docker-compose.yml").getFile()))
             .withPull(false)
-//            .withLocalCompose(true)
             .withEnv(
                     Stream.of(
                             new AbstractMap.SimpleImmutableEntry<>("MINIO_PORT", "9000"),
