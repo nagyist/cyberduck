@@ -66,8 +66,10 @@ public class JWKSetUVFVaultMetadataProviderTest {
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObject, new JWKSet(JWK.parse(memberKey)));
         final String b1 = provider.decrypt();
         assertEquals(b1, provider.decrypt());
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
         assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
         assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
         assertEquals(b1, provider.decrypt());
         assertEquals(b1, provider.decrypt());
         assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
@@ -117,8 +119,11 @@ public class JWKSetUVFVaultMetadataProviderTest {
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObjectJSON, new JWKSet(JWK.parse(memberKey)));
         final String b2 = provider.decrypt();
         assertEquals(b1, b2);
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
         assertEquals(b1, provider.decrypt());
         provider.encrypt();
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
         assertEquals(b1, provider.decrypt());
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
     }
 }

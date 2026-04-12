@@ -28,7 +28,9 @@ public class DefaultUVFVaultMetadataProviderTest extends TestCase {
         final DefaultUVFVaultMetadataProvider provider = new DefaultUVFVaultMetadataProvider(new VaultCredentials("test"));
         final String b1 = provider.decrypt();
         assertEquals(b1, provider.decrypt());
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
         provider.encrypt();
         assertEquals(b1, provider.decrypt());
+        assertEquals(provider.computeRootDirIdHash(), provider.computeRootDirIdHash());
     }
 }
