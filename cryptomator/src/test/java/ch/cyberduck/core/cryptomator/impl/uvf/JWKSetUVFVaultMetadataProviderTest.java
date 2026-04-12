@@ -116,7 +116,7 @@ public class JWKSetUVFVaultMetadataProviderTest {
 
         final JWEHeader jweHeader = JWEHeader.parse(header);
         final JWEObjectJSON jweObjectJSON = new JWEObjectJSON(new JWEObject(jweHeader, new Payload(payload)));
-        final byte[] b1 = jweObjectJSON.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
+        final byte[] b1 = jweObjectJSON.getPayload().toString().getBytes(StandardCharsets.UTF_8);
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObjectJSON, new JWKSet(JWK.parse(memberKey)));
         final byte[] b2 = provider.decrypt();
         assertArrayEquals(b1, b2);
