@@ -86,10 +86,11 @@ public class UVFVault extends AbstractVault {
     @Override
     public void create(final Session<?> session, final String region, final VaultMetadataProvider metadata) throws BackgroundException {
         // Generic vault creation with provided metadata
-        final UVFVaultMetadataProvider provider = UVFVaultMetadataProvider.cast(metadata);
-        final byte[] rootDirectoryMetadata = provider.computeRootDirUvf();
-        final String rootDirectoryIdHash = provider.computeRootDirIdHash();
-        this.uploadTemplate(session, region, provider.encrypt(), rootDirectoryMetadata, rootDirectoryIdHash);
+        try(final UVFVaultMetadataProvider provider = UVFVaultMetadataProvider.cast(metadata)) {
+            final byte[] rootDirectoryMetadata = provider.computeRootDirUvf();
+            final String rootDirectoryIdHash = provider.computeRootDirIdHash();
+            this.uploadTemplate(session, region, provider.encrypt(), rootDirectoryMetadata, rootDirectoryIdHash);
+        }
     }
 
     /**
@@ -131,14 +132,15 @@ public class UVFVault extends AbstractVault {
 
     @Override
     public void load(final Session<?> session, final VaultMetadataProvider metadata) throws BackgroundException {
-        final UVFVaultMetadataProvider provider = UVFVaultMetadataProvider.cast(metadata);
-        this.masterKey = UVFMasterkey.fromDecryptedPayload(new String(provider.decrypt(), StandardCharsets.US_ASCII));
-        final CryptorProvider cryptorProvider = CryptorProvider.forScheme(CryptorProvider.Scheme.UVF_DRAFT);
-        log.debug("Initialized crypto provider {}", cryptorProvider);
-        this.cryptor = cryptorProvider.provide(masterKey, FastSecureRandomProvider.get().provide());
-        this.filenameProvider = new CryptoFilenameV7Provider(Integer.MAX_VALUE);
-        this.directoryProvider = new CryptoDirectoryUVFProvider(this, filenameProvider);
-        this.nonceSize = 12;
+        try(final UVFVaultMetadataProvider provider = UVFVaultMetadataProvider.cast(metadata)) {
+            this.masterKey = UVFMasterkey.fromDecryptedPayload(new String(provider.decrypt(), StandardCharsets.US_ASCII));
+            final CryptorProvider cryptorProvider = CryptorProvider.forScheme(CryptorProvider.Scheme.UVF_DRAFT);
+            log.debug("Initialized crypto provider {}", cryptorProvider);
+            this.cryptor = cryptorProvider.provide(masterKey, FastSecureRandomProvider.get().provide());
+            this.filenameProvider = new CryptoFilenameV7Provider(Integer.MAX_VALUE);
+            this.directoryProvider = new CryptoDirectoryUVFProvider(this, filenameProvider);
+            this.nonceSize = 12;
+        }
     }
 
     @Override

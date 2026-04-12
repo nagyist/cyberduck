@@ -118,4 +118,9 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
             throw new VaultException("Failure decrypting metadata", e);
         }
     }
+
+    @Override
+    public void close() {
+        payload = null;
+    }
 }

@@ -30,4 +30,9 @@ public class MasterkeyVaultMetadataProvider implements CredentialsVaultMetadataP
     public VaultCredentials getCredentials() {
         return credentials;
     }
+
+    @Override
+    public void close() {
+        credentials.reset();
+    }
 }

@@ -118,4 +118,9 @@ public class DefaultUVFVaultMetadataProvider implements UVFVaultMetadataProvider
         }
         return metadata.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
     }
+
+    @Override
+    public void close() {
+        passphrase.reset();
+    }
 }
