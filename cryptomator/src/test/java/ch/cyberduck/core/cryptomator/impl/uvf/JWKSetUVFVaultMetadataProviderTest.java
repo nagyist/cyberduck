@@ -18,8 +18,6 @@ package ch.cyberduck.core.cryptomator.impl.uvf;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
-
 import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWEObjectJSON;
@@ -27,7 +25,6 @@ import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class JWKSetUVFVaultMetadataProviderTest {
@@ -67,13 +64,13 @@ public class JWKSetUVFVaultMetadataProviderTest {
 
         final JWEObjectJSON jweObject = JWEObjectJSON.parse(jwe);
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObject, new JWKSet(JWK.parse(memberKey)));
-        final byte[] b1 = provider.decrypt();
-        assertArrayEquals(b1, provider.decrypt());
-        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
-        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
-        assertArrayEquals(b1, provider.decrypt());
-        assertArrayEquals(b1, provider.decrypt());
-        assertEquals(StringUtils.deleteWhitespace(jwe), new String(provider.encrypt(), StandardCharsets.US_ASCII));
+        final String b1 = provider.decrypt();
+        assertEquals(b1, provider.decrypt());
+        assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
+        assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
+        assertEquals(b1, provider.decrypt());
+        assertEquals(b1, provider.decrypt());
+        assertEquals(StringUtils.deleteWhitespace(jwe), provider.encrypt());
     }
 
 
@@ -116,12 +113,12 @@ public class JWKSetUVFVaultMetadataProviderTest {
 
         final JWEHeader jweHeader = JWEHeader.parse(header);
         final JWEObjectJSON jweObjectJSON = new JWEObjectJSON(new JWEObject(jweHeader, new Payload(payload)));
-        final byte[] b1 = jweObjectJSON.getPayload().toString().getBytes(StandardCharsets.UTF_8);
+        final String b1 = jweObjectJSON.getPayload().toString();
         final JWKSetUVFVaultMetadataProvider provider = new JWKSetUVFVaultMetadataProvider(jweObjectJSON, new JWKSet(JWK.parse(memberKey)));
-        final byte[] b2 = provider.decrypt();
-        assertArrayEquals(b1, b2);
-        assertArrayEquals(b1, provider.decrypt());
+        final String b2 = provider.decrypt();
+        assertEquals(b1, b2);
+        assertEquals(b1, provider.decrypt());
         provider.encrypt();
-        assertArrayEquals(b1, provider.decrypt());
+        assertEquals(b1, provider.decrypt());
     }
 }

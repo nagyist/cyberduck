@@ -21,16 +21,14 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
-import static org.junit.Assert.assertArrayEquals;
-
 public class DefaultUVFVaultMetadataProviderTest extends TestCase {
 
     @Test
     public void testGetMetadata() throws Exception {
         final DefaultUVFVaultMetadataProvider provider = new DefaultUVFVaultMetadataProvider(new VaultCredentials("test"));
-        final byte[] b1 = provider.decrypt();
-        assertArrayEquals(b1, provider.decrypt());
+        final String b1 = provider.decrypt();
+        assertEquals(b1, provider.decrypt());
         provider.encrypt();
-        assertArrayEquals(b1, provider.decrypt());
+        assertEquals(b1, provider.decrypt());
     }
 }

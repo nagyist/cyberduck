@@ -89,7 +89,7 @@ public class DefaultUVFVaultMetadataProvider implements UVFVaultMetadataProvider
     }
 
     @Override
-    public byte[] encrypt() throws VaultException {
+    public String encrypt() throws VaultException {
         try {
             switch(metadata.getState()) {
                 case DECRYPTED:
@@ -101,11 +101,11 @@ public class DefaultUVFVaultMetadataProvider implements UVFVaultMetadataProvider
         catch(JOSEException e) {
             throw new VaultException("Failure encrypting metadata", e);
         }
-        return metadata.serialize().getBytes(StandardCharsets.US_ASCII);
+        return metadata.serialize();
     }
 
     @Override
-    public byte[] decrypt() throws VaultException {
+    public String decrypt() throws VaultException {
         try {
             switch(metadata.getState()) {
                 case ENCRYPTED:
@@ -116,7 +116,7 @@ public class DefaultUVFVaultMetadataProvider implements UVFVaultMetadataProvider
         catch(JOSEException e) {
             throw new VaultException("Failure decrypting metadata", e);
         }
-        return metadata.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
+        return metadata.getPayload().toString();
     }
 
     @Override

@@ -98,13 +98,13 @@ public class UVFVault extends AbstractVault {
      *
      * @param session               The session used for the interaction with the backend.
      * @param region                The region identifier used to associate the uploaded data.
-     * @param vaultMetadata         Metadata as JWE of the vault to be uploaded, represented as a byte array.
+     * @param vaultMetadata         Metadata as JWE of the vault to be uploaded
      * @param rootDirectoryMetadata The encrypted directory metadata file, represented as a byte array.
      * @param rootDirectoryIdHash   The hash of the root directory ID used to create the directory structure.
      * @throws BackgroundException If an error occurs during the upload process.
      */
     private void uploadTemplate(final Session<?> session, final String region,
-                                final byte[] vaultMetadata, final byte[] rootDirectoryMetadata, final String rootDirectoryIdHash) throws BackgroundException {
+                                final String vaultMetadata, final byte[] rootDirectoryMetadata, final String rootDirectoryIdHash) throws BackgroundException {
 
         log.debug("Create vault root directory at {}", home);
         // Obtain non encrypted directory writer
@@ -125,7 +125,7 @@ public class UVFVault extends AbstractVault {
         directory.mkdir(session._getFeature(Write.class), secondLevel, status);
 
         // vault.uvf
-        new ContentWriter(session).write(this.getConfig(), vaultMetadata);
+        new ContentWriter(session).write(this.getConfig(), vaultMetadata.getBytes(StandardCharsets.US_ASCII));
         // dir.uvf
         new ContentWriter(session).write(new Path(secondLevel, "dir.uvf", EnumSet.of(Path.Type.file)), rootDirectoryMetadata);
     }
@@ -133,7 +133,7 @@ public class UVFVault extends AbstractVault {
     @Override
     public void load(final Session<?> session, final VaultMetadataProvider metadata) throws BackgroundException {
         try(final UVFVaultMetadataProvider provider = UVFVaultMetadataProvider.cast(metadata)) {
-            this.masterKey = UVFMasterkey.fromDecryptedPayload(new String(provider.decrypt(), StandardCharsets.US_ASCII));
+            this.masterKey = UVFMasterkey.fromDecryptedPayload(provider.decrypt());
             final CryptorProvider cryptorProvider = CryptorProvider.forScheme(CryptorProvider.Scheme.UVF_DRAFT);
             log.debug("Initialized crypto provider {}", cryptorProvider);
             this.cryptor = cryptorProvider.provide(masterKey, FastSecureRandomProvider.get().provide());

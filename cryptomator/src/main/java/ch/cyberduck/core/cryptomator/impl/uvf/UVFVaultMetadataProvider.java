@@ -37,13 +37,13 @@ public interface UVFVaultMetadataProvider extends VaultMetadataProvider {
      * @return The encrypted byte array representing the secured payload.
      * @throws VaultException If the encryption process encounters an invalid state or an unexpected error occurs.
      */
-    byte[] encrypt() throws VaultException;
+    String encrypt() throws VaultException;
 
     /**
      * @return The decrypted payload.
      * @throws VaultException If an error occurs during the decryption process, such as an invalid state or corrupted data.
      */
-    byte[] decrypt() throws VaultException;
+    String decrypt() throws VaultException;
 
     default String computeRootDirIdHash(final String payloadJSON) {
         final UVFMasterkey masterKey = UVFMasterkey.fromDecryptedPayload(payloadJSON);

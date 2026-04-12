@@ -17,7 +17,6 @@ package ch.cyberduck.core.cryptomator.impl.uvf;
 
 import ch.cyberduck.core.vault.VaultException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -68,13 +67,13 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     }
 
     @Override
-    public byte[] encrypt() throws VaultException {
+    public String encrypt() throws VaultException {
         switch(metadata.getState()) {
             case UNENCRYPTED:
                 encrypt(metadata, jwk);
                 break;
         }
-        return metadata.serializeGeneral().getBytes(StandardCharsets.US_ASCII);
+        return metadata.serializeGeneral();
     }
 
     private static JWEObjectJSON encrypt(final JWEObjectJSON jwe, final JWKSet keys) throws VaultException {
@@ -88,7 +87,7 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     }
 
     @Override
-    public byte[] decrypt() throws VaultException {
+    public String decrypt() throws VaultException {
         if(payload == null) {
             // Encrypted state
             final Optional<JWK> key = jwk.getKeys().stream().findFirst();
@@ -97,7 +96,7 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
             }
             payload = decrypt(metadata, key.get());
         }
-        return payload.toString().getBytes(StandardCharsets.UTF_8);
+        return payload.toString();
     }
 
     private static Payload decrypt(final JWEObjectJSON jwe, final JWK key) throws VaultException {
