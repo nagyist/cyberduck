@@ -17,12 +17,13 @@ package ch.cyberduck.core.cryptomator.impl.uvf;
 
 import ch.cyberduck.core.vault.VaultException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Optional;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWEObjectJSON;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MultiDecrypter;
 import com.nimbusds.jose.crypto.MultiEncrypter;
 import com.nimbusds.jose.jwk.JWK;
@@ -36,13 +37,23 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     private final JWKSet jwk;
 
     /**
+     * The cached decrypted payload of the JWE object. Preserves the original
+     * plaintext across that state transition.
+     */
+    private Payload payload;
+
+    /**
      * Constructs a new instance of {@code DefaultVaultMetadataUVFProvider}.
      *
-     * @param jwk The {@code JWKCallback} instance used for key management and related operations.
+     * @param metadata The JWE object representing the vault metadata in encrypted or unencrypted state.
+     * @param jwk      The {@code JWKCallback} instance used for key management and related operations.
      */
     public JWKSetUVFVaultMetadataProvider(final JWEObjectJSON metadata, final JWKSet jwk) {
         this.metadata = metadata;
         this.jwk = jwk;
+        if(metadata.getState() == JWEObject.State.UNENCRYPTED) {
+            this.payload = metadata.getPayload();
+        }
     }
 
     @Override
@@ -56,40 +67,59 @@ public class JWKSetUVFVaultMetadataProvider implements UVFVaultMetadataProvider 
     }
 
     @Override
-    public byte[] encrypt() throws VaultException {
-        try {
-            switch(metadata.getState()) {
-                // The JWE object must be in an encrypted or decrypted state
-                case UNENCRYPTED:
-                case DECRYPTED:
-                    metadata.encrypt(new MultiEncrypter(jwk));
-                    break;
-            }
+    public String encrypt() throws VaultException {
+        switch(metadata.getState()) {
+            case UNENCRYPTED:
+                encrypt(metadata, jwk);
+                break;
         }
-        catch(JOSEException e) {
+        return metadata.serializeGeneral();
+    }
+
+    private static JWEObjectJSON encrypt(final JWEObjectJSON jwe, final JWKSet keys) throws VaultException {
+        try {
+            jwe.encrypt(new MultiEncrypter(keys));
+            return jwe;
+        }
+        catch(JOSEException | IllegalStateException e) {
             throw new VaultException("Failure encrypting metadata", e);
         }
-        return metadata.serializeGeneral().getBytes(StandardCharsets.US_ASCII);
     }
 
     @Override
-    public byte[] decrypt() throws VaultException {
-        final Optional<JWK> key = jwk.getKeys().stream().findFirst();
-        if(!key.isPresent()) {
-            throw new VaultException("Missing key");
+    public String decrypt() throws VaultException {
+        if(payload == null) {
+            // Encrypted state
+            final Optional<JWK> key = jwk.getKeys().stream().findFirst();
+            if(!key.isPresent()) {
+                throw new VaultException("Missing key");
+            }
+            payload = decrypt(metadata, key.get());
+        }
+        return payload.toString();
+    }
+
+    private static Payload decrypt(final JWEObjectJSON jwe, final JWK key) throws VaultException {
+        final Object uvfSpecVersion = jwe.getHeader().getCustomParams().get(UVF_SPEC_VERSION_KEY_PARAM);
+        if(null == uvfSpecVersion) {
+            throw new VaultException(String.format("Missing value for critical header %s",
+                    UVF_SPEC_VERSION_KEY_PARAM));
+        }
+        if(1 != Integer.parseInt(uvfSpecVersion.toString())) {
+            throw new VaultException(String.format("Unexpected value \"%s\" for critical header %s. Expected \"1\"",
+                    UVF_SPEC_VERSION_KEY_PARAM, uvfSpecVersion));
         }
         try {
-            switch(metadata.getState()) {
-                case UNENCRYPTED:
-                    return metadata.getPayload().toString().getBytes(StandardCharsets.US_ASCII);
-                case ENCRYPTED:
-                    metadata.decrypt(new MultiDecrypter(key.get(), Collections.singleton(UVF_SPEC_VERSION_KEY_PARAM)));
-                    break;
-            }
+            jwe.decrypt(new MultiDecrypter(key, Collections.singleton(UVF_SPEC_VERSION_KEY_PARAM)));
+            return jwe.getPayload();
         }
-        catch(JOSEException e) {
+        catch(JOSEException | IllegalStateException e) {
             throw new VaultException("Failure decrypting metadata", e);
         }
-        return metadata.serializeGeneral().getBytes(StandardCharsets.US_ASCII);
+    }
+
+    @Override
+    public void close() {
+        payload = null;
     }
 }

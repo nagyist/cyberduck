@@ -15,6 +15,16 @@ package ch.cyberduck.core.vault;
  * GNU General Public License for more details.
  */
 
-public interface VaultMetadataProvider {
+import javax.security.auth.Destroyable;
+import java.io.Closeable;
 
+public interface VaultMetadataProvider extends Destroyable, Closeable {
+
+    @Override
+    default void destroy() {
+        this.close();
+    }
+
+    @Override
+    void close();
 }

@@ -189,48 +189,49 @@ public class CryptomatorVault extends AbstractVault {
 
     @Override
     public void create(final Session<?> session, final String region, final VaultMetadataProvider metadata) throws BackgroundException {
-        final CredentialsVaultMetadataProvider provider = CredentialsVaultMetadataProvider.cast(metadata);
-        final VaultCredentials credentials = provider.getCredentials();
-        final String passphrase = credentials.getPassword();
-        final ByteArrayOutputStream mkArray = new ByteArrayOutputStream();
-        final PerpetualMasterkey mk = Masterkey.generate(FastSecureRandomProvider.get().provide());
-        final MasterkeyFileAccess access = new MasterkeyFileAccess(pepper, FastSecureRandomProvider.get().provide());
-        final MasterkeyFile masterkeyFile;
-        try {
-            access.persist(mk, mkArray, passphrase, VAULT_VERSION);
-            masterkeyFile = MasterkeyFile.read(new StringReader(new String(mkArray.toByteArray(), StandardCharsets.UTF_8)));
+        try(final CredentialsVaultMetadataProvider provider = CredentialsVaultMetadataProvider.cast(metadata)) {
+            final VaultCredentials credentials = provider.getCredentials();
+            final String passphrase = credentials.getPassword();
+            final ByteArrayOutputStream mkArray = new ByteArrayOutputStream();
+            final PerpetualMasterkey mk = Masterkey.generate(FastSecureRandomProvider.get().provide());
+            final MasterkeyFileAccess access = new MasterkeyFileAccess(pepper, FastSecureRandomProvider.get().provide());
+            final MasterkeyFile masterkeyFile;
+            try {
+                access.persist(mk, mkArray, passphrase, VAULT_VERSION);
+                masterkeyFile = MasterkeyFile.read(new StringReader(new String(mkArray.toByteArray(), StandardCharsets.UTF_8)));
+            }
+            catch(IOException e) {
+                throw new VaultException("Failure creating master key", e);
+            }
+            log.debug("Write master key to {}", masterkeyPath);
+            // Obtain non encrypted directory writer
+            final Directory<?> directory = session._getFeature(Directory.class);
+            final TransferStatus status = new TransferStatus().setRegion(region);
+            final Encryption encryption = session._getFeature(Encryption.class);
+            if(encryption != null) {
+                status.setEncryption(encryption.getDefault(home));
+            }
+            directory.mkdir(session._getFeature(Write.class), home, status);
+            new ContentWriter(session).write(masterkeyPath, mkArray.toByteArray());
+            // Create vaultconfig.cryptomator
+            final Algorithm algorithm = Algorithm.HMAC256(mk.getEncoded());
+            final String conf = JWT.create()
+                    .withJWTId(new UUIDRandomStringService().random())
+                    .withKeyId(String.format("masterkeyfile:%s", masterkeyPath.getName()))
+                    .withClaim(JSON_KEY_VAULTVERSION, VAULT_VERSION)
+                    .withClaim(JSON_KEY_CIPHERCONFIG, CryptorProvider.Scheme.SIV_GCM.toString())
+                    .withClaim(JSON_KEY_SHORTENING_THRESHOLD, CryptoFilenameV7Provider.DEFAULT_NAME_SHORTENING_THRESHOLD)
+                    .sign(algorithm);
+            new ContentWriter(session).write(config, conf.getBytes(StandardCharsets.US_ASCII));
+            this.unlock(parseVaultConfigFromJWT(conf).withMasterkeyFile(masterkeyFile), passphrase);
+            final Path secondLevel = directoryProvider.toEncrypted(session, home);
+            final Path firstLevel = secondLevel.getParent();
+            final Path dataDir = firstLevel.getParent();
+            log.debug("Create vault root directory at {}", secondLevel);
+            directory.mkdir(session._getFeature(Write.class), dataDir, status);
+            directory.mkdir(session._getFeature(Write.class), firstLevel, status);
+            directory.mkdir(session._getFeature(Write.class), secondLevel, status);
         }
-        catch(IOException e) {
-            throw new VaultException("Failure creating master key", e);
-        }
-        log.debug("Write master key to {}", masterkeyPath);
-        // Obtain non encrypted directory writer
-        final Directory<?> directory = session._getFeature(Directory.class);
-        final TransferStatus status = new TransferStatus().setRegion(region);
-        final Encryption encryption = session._getFeature(Encryption.class);
-        if(encryption != null) {
-            status.setEncryption(encryption.getDefault(home));
-        }
-        directory.mkdir(session._getFeature(Write.class), home, status);
-        new ContentWriter(session).write(masterkeyPath, mkArray.toByteArray());
-        // Create vaultconfig.cryptomator
-        final Algorithm algorithm = Algorithm.HMAC256(mk.getEncoded());
-        final String conf = JWT.create()
-                .withJWTId(new UUIDRandomStringService().random())
-                .withKeyId(String.format("masterkeyfile:%s", masterkeyPath.getName()))
-                .withClaim(JSON_KEY_VAULTVERSION, VAULT_VERSION)
-                .withClaim(JSON_KEY_CIPHERCONFIG, CryptorProvider.Scheme.SIV_GCM.toString())
-                .withClaim(JSON_KEY_SHORTENING_THRESHOLD, CryptoFilenameV7Provider.DEFAULT_NAME_SHORTENING_THRESHOLD)
-                .sign(algorithm);
-        new ContentWriter(session).write(config, conf.getBytes(StandardCharsets.US_ASCII));
-        this.unlock(parseVaultConfigFromJWT(conf).withMasterkeyFile(masterkeyFile), passphrase);
-        final Path secondLevel = directoryProvider.toEncrypted(session, home);
-        final Path firstLevel = secondLevel.getParent();
-        final Path dataDir = firstLevel.getParent();
-        log.debug("Create vault root directory at {}", secondLevel);
-        directory.mkdir(session._getFeature(Write.class), dataDir, status);
-        directory.mkdir(session._getFeature(Write.class), firstLevel, status);
-        directory.mkdir(session._getFeature(Write.class), secondLevel, status);
     }
 
     @Override
