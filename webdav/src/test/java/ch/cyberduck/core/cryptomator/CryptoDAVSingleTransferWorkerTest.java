@@ -22,6 +22,7 @@ import ch.cyberduck.core.Host;
 import ch.cyberduck.core.Local;
 import ch.cyberduck.core.LoginCallback;
 import ch.cyberduck.core.NullFilter;
+import ch.cyberduck.core.PasswordCallback;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.PathAttributes;
 import ch.cyberduck.core.ProgressListener;
@@ -103,9 +104,9 @@ public class CryptoDAVSingleTransferWorkerTest extends AbstractDAVTest {
         IOUtils.write(content, out2);
         out2.close();
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        final AbstractVault cryptomator = provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
-        session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(),
-                provider.load(session, cryptomator.getHome(), new VaultVersion(vaultVersion), new VaultCredentials("test"))));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        session.withRegistry(new DefaultVaultRegistry(PasswordCallback.noop, cryptomator));
         final Transfer t = new UploadTransfer(new Host(new TestProtocol()), Collections.singletonList(new TransferItem(dir1, localDirectory1)), new NullFilter<>());
         assertTrue(new SingleTransferWorker(session, session, t, new TransferOptions(), new TransferSpeedometer(t), new DisabledTransferPrompt() {
             @Override
@@ -144,9 +145,9 @@ public class CryptoDAVSingleTransferWorkerTest extends AbstractDAVTest {
         final Path home = new DefaultHomeFinderService(session).find();
         final Path vault = new Path(home, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
         final DefaultVaultProvider provider = new DefaultVaultProvider(session);
-        final AbstractVault cryptomator = provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
-        session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(),
-                provider.load(session, cryptomator.getHome(), new VaultVersion(vaultVersion), new VaultCredentials("test"))));
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        session.withRegistry(new DefaultVaultRegistry(new DisabledPasswordCallback(), cryptomator));
         final Path dir1 = cryptomator.getFeature(session, Directory.class, new DAVDirectoryFeature(session)).mkdir(
                 cryptomator.getFeature(session, Write.class, new DAVWriteFeature(session)), new Path(vault, new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory)), new TransferStatus());
         final Local localDirectory1 = new Local(System.getProperty("java.io.tmpdir"), new AlphanumericRandomStringService().random());
