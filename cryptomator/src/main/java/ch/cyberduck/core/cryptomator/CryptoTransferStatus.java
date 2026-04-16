@@ -44,6 +44,7 @@ public class CryptoTransferStatus extends ProxyTransferStatus implements StreamC
     public TransferStatus setResponse(final PathAttributes attributes) {
         try {
             attributes.setSize(vault.toCleartextSize(0L, attributes.getSize()));
+            attributes.setDisplayname(null);
             super.setResponse(attributes);
         }
         catch(BackgroundException e) {
