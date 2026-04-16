@@ -23,6 +23,7 @@ import ch.cyberduck.core.Local;
 import ch.cyberduck.core.LoginCallback;
 import ch.cyberduck.core.NullFilter;
 import ch.cyberduck.core.Path;
+import ch.cyberduck.core.PathAttributes;
 import ch.cyberduck.core.ProgressListener;
 import ch.cyberduck.core.TestProtocol;
 import ch.cyberduck.core.cryptomator.features.CryptoReadFeature;
@@ -116,7 +117,9 @@ public class CryptoDAVSingleTransferWorkerTest extends AbstractDAVTest {
 
         }.run(session));
         assertTrue(cryptomator.getFeature(session, Find.class, new DAVFindFeature(session)).find(dir1));
-        assertEquals(content.length, cryptomator.getFeature(session, AttributesFinder.class, new DAVAttributesFinderFeature(session)).find(file1).getSize());
+        final PathAttributes attr = cryptomator.getFeature(session, AttributesFinder.class, new DAVAttributesFinderFeature(session)).find(file1);
+        assertEquals(content.length, attr.getSize());
+        assertNull(attr.getDisplayname());
         {
             final ByteArrayOutputStream buffer = new ByteArrayOutputStream(content.length);
             final InputStream in = new CryptoReadFeature(session, new DAVReadFeature(session), cryptomator).read(file1, new TransferStatus().setLength(content.length), ConnectionCallback.noop);
