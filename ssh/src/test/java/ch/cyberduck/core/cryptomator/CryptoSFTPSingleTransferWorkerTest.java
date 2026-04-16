@@ -17,14 +17,12 @@ package ch.cyberduck.core.cryptomator;
 
 import ch.cyberduck.core.AlphanumericRandomStringService;
 import ch.cyberduck.core.ConnectionCallback;
-import ch.cyberduck.core.Credentials;
 import ch.cyberduck.core.DisabledListProgressListener;
-import ch.cyberduck.core.DisabledPasswordCallback;
 import ch.cyberduck.core.Host;
 import ch.cyberduck.core.Local;
 import ch.cyberduck.core.LoginCallback;
-import ch.cyberduck.core.LoginOptions;
 import ch.cyberduck.core.NullFilter;
+import ch.cyberduck.core.PasswordCallback;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.PathAttributes;
 import ch.cyberduck.core.ProgressListener;
@@ -104,13 +102,10 @@ public class CryptoSFTPSingleTransferWorkerTest extends AbstractSFTPTest {
         final OutputStream out2 = localFile2.getOutputStream(false);
         IOUtils.write(content, out2);
         out2.close();
-        final AbstractVault cryptomator = new DefaultVaultProvider(session).create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
-        final DefaultVaultRegistry vaults = new DefaultVaultRegistry(new DisabledPasswordCallback() {
-            @Override
-            public Credentials prompt(final Host bookmark, final String title, final String reason, final LoginOptions options) {
-                return new VaultCredentials("test");
-            }
-        });
+        final DefaultVaultProvider provider = new DefaultVaultProvider(session);
+        provider.create(session, null, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
+        final DefaultVaultRegistry vaults = new DefaultVaultRegistry(PasswordCallback.noop);
+        final AbstractVault cryptomator = provider.load(session, vault, new VaultVersion(vaultVersion), new VaultCredentials("test"));
         vaults.add(cryptomator);
         session.withRegistry(vaults);
         final Host host = new Host(new TestProtocol());
