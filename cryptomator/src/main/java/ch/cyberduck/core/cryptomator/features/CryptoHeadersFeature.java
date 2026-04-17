@@ -50,7 +50,7 @@ public class CryptoHeadersFeature implements Headers {
 
     @Override
     public void setMetadata(final Path file, final TransferStatus status) throws BackgroundException {
-        delegate.setMetadata(vault.encrypt(session, file, true), new CryptoTransferStatus(vault, status));
+        delegate.setMetadata(vault.encrypt(session, file, true), new CryptoTransferStatus(vault, file, status));
     }
 
     @Override
