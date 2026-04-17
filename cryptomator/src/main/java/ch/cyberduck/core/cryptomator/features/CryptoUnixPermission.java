@@ -18,6 +18,7 @@ package ch.cyberduck.core.cryptomator.features;
 import ch.cyberduck.core.Path;
 import ch.cyberduck.core.Permission;
 import ch.cyberduck.core.Session;
+import ch.cyberduck.core.cryptomator.CryptoTransferStatus;
 import ch.cyberduck.core.exception.BackgroundException;
 import ch.cyberduck.core.features.UnixPermission;
 import ch.cyberduck.core.features.Vault;
@@ -59,7 +60,7 @@ public class CryptoUnixPermission implements UnixPermission {
 
     @Override
     public void setUnixPermission(final Path file, final TransferStatus status) throws BackgroundException {
-        delegate.setUnixPermission(cryptomator.encrypt(session, file, true), status);
+        delegate.setUnixPermission(cryptomator.encrypt(session, file, true), new CryptoTransferStatus(cryptomator, status));
     }
 
     @Override

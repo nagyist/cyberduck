@@ -644,7 +644,7 @@ public class CryptomatorVault implements Vault {
             if(type == Symlink.class) {
                 return (T) new CryptoSymlinkFeature(session, (Symlink) delegate, this);
             }
-            if(type == Headers.class) {
+            if(type == Headers.class || type == Metadata.class) {
                 return (T) new CryptoHeadersFeature(session, (Headers) delegate, this);
             }
             if(type == Compress.class) {
