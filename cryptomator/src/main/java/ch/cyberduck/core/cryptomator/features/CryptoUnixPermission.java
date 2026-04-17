@@ -60,7 +60,7 @@ public class CryptoUnixPermission implements UnixPermission {
 
     @Override
     public void setUnixPermission(final Path file, final TransferStatus status) throws BackgroundException {
-        delegate.setUnixPermission(cryptomator.encrypt(session, file, true), new CryptoTransferStatus(cryptomator, status));
+        delegate.setUnixPermission(cryptomator.encrypt(session, file, true), new CryptoTransferStatus(cryptomator, file, status));
     }
 
     @Override

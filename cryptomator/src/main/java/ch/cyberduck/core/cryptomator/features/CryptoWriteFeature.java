@@ -70,7 +70,7 @@ public class CryptoWriteFeature<Reply> implements Write<Reply> {
                 status.setNonces(nonces);
             }
             final StatusOutputStream<Reply> stream = proxy.write(vault.encrypt(session, file),
-                    new CryptoTransferStatus(vault, status), callback);
+                    new CryptoTransferStatus(vault, file, status), callback);
             if(status.getOffset() == 0L) {
                 stream.write(status.getHeader().array());
             }

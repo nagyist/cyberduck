@@ -45,7 +45,7 @@ public class CryptoAclPermission implements AclPermission {
 
     @Override
     public void setPermission(final Path file, final TransferStatus status) throws BackgroundException {
-        delegate.setPermission(vault.encrypt(session, file), new CryptoTransferStatus(vault, status));
+        delegate.setPermission(vault.encrypt(session, file), new CryptoTransferStatus(vault, file, status));
     }
 
     @Override
