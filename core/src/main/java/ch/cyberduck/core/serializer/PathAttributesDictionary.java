@@ -115,7 +115,7 @@ public class PathAttributesDictionary<T> {
         attributes.setMetadata(Collections.emptyMap());
         attributes.setRegion(dict.stringForKey("Region"));
         attributes.setStorageClass(dict.stringForKey("Storage Class"));
-        final T vaultMetadataObj = dict.objectForKey("Vault Metadata");
+        final T vaultMetadataObj = dict.objectForKey("Vault Version");
         if(vaultMetadataObj != null) {
             attributes.setVaultVersion(new VaultMetadataDictionary<>(factory).deserialize(vaultMetadataObj));
         }

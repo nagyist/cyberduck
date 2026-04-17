@@ -146,7 +146,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
     /**
      * Cryptomator vault metadata
      */
-    private VaultVersion vaultMetadata;
+    private VaultVersion vaultVersion;
     /**
      * Cryptomator decrypted path
      */
@@ -190,7 +190,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
         metadata = new HashMap<>(copy.getMetadata());
         custom = new HashMap<>(copy.getCustom());
         verdict = copy.getVerdict();
-        vaultMetadata = copy.getVaultVersion();
+        vaultVersion = copy.getVaultVersion();
         decrypted = copy.getDecrypted();
         directoryId = copy.getDirectoryId();
     }
@@ -270,8 +270,8 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
         if(StringUtils.isNotBlank(storageClass)) {
             dict.setStringForKey(storageClass, "Storage Class");
         }
-        if(vaultMetadata != null) {
-            dict.setObjectForKey(vaultMetadata, "VaultMetadata");
+        if(vaultVersion != null) {
+            dict.setObjectForKey(vaultVersion, "Vault Version");
         }
         if(!custom.isEmpty()) {
             dict.setMapForKey(custom, "Custom");
@@ -526,12 +526,12 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
 
     @Override
     public VaultVersion getVaultVersion() {
-        return vaultMetadata;
+        return vaultVersion;
     }
 
     @Override
     public PathAttributes setVaultVersion(final VaultVersion version) {
-        this.vaultMetadata = version;
+        this.vaultVersion = version;
         return this;
     }
 
@@ -685,7 +685,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
         if(!Objects.equals(lockId, that.lockId)) {
             return false;
         }
-        if(!Objects.equals(vaultMetadata, that.vaultMetadata)) {
+        if(!Objects.equals(vaultVersion, that.vaultVersion)) {
             return false;
         }
         return true;
@@ -703,7 +703,7 @@ public class DefaultPathAttributes implements PathAttributes, Attributes, Serial
         result = 31 * result + (revision != null ? revision.hashCode() : 0);
         result = 31 * result + (verdict != null ? verdict.hashCode() : 0);
         result = 31 * result + (lockId != null ? lockId.hashCode() : 0);
-        result = 31 * result + (vaultMetadata != null ? vaultMetadata.hashCode() : 0);
+        result = 31 * result + (vaultVersion != null ? vaultVersion.hashCode() : 0);
         return result;
     }
 
