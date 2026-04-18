@@ -20,7 +20,6 @@ import ch.cyberduck.core.ConnectionCallback;
 import ch.cyberduck.core.DefaultIOExceptionMappingService;
 import ch.cyberduck.core.Local;
 import ch.cyberduck.core.Path;
-import ch.cyberduck.core.PathContainerService;
 import ch.cyberduck.core.ProgressListener;
 import ch.cyberduck.core.UUIDRandomStringService;
 import ch.cyberduck.core.concurrency.Interruptibles;
@@ -93,9 +92,6 @@ public class SDSDirectS3UploadFeature extends HttpUploadFeature<Node, MessageDig
     private final Long partsize;
     private final Integer concurrency;
     private final TemporaryFileService temp = TemporaryFileServiceFactory.instance();
-
-    private final PathContainerService containerService
-            = new SDSPathContainerService();
 
     public SDSDirectS3UploadFeature(final SDSSession session, final SDSNodeIdProvider nodeid) {
         this(session, nodeid, HostPreferencesFactory.get(session.getHost()).getLong("s3.upload.multipart.size"),
