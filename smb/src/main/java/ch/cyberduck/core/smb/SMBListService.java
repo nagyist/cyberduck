@@ -80,7 +80,6 @@ public class SMBListService implements ListService {
                 attr.setModificationDate(f.getLastWriteTime().toEpochMillis());
                 attr.setCreationDate(f.getCreationTime().toEpochMillis());
                 attr.setSize(f.getEndOfFile());
-                attr.setDisplayname(f.getFileName());
                 result.add(new Path(directory, filename, type, attr));
             }
             listener.chunk(directory, result);
