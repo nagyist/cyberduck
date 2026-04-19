@@ -17,6 +17,7 @@ jobs:
         os: [ linux-self-hosted, macos-self-hosted, windows-self-hosted ]
     steps:
       - name: Set up Docker
+        if: ${{ runner.os == 'macOS' || runner.os == 'Windows' }}
         uses: docker/setup-docker-action@v5
       - uses: actions/checkout@v6
       - name: Set up JDK 21
