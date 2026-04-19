@@ -57,5 +57,13 @@ public class VaultVersion implements Serializable {
     public int hashCode() {
         return Objects.hashCode(type);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("VaultVersion{");
+        sb.append("type=").append(type);
+        sb.append('}');
+        return sb.toString();
+    }
 }
 
