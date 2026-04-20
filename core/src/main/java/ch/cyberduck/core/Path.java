@@ -113,7 +113,9 @@ public class Path extends AbstractPath implements Referenceable, Serializable {
         dict.setStringForKey(String.valueOf(type), "Type");
         dict.setStringForKey(this.getAbsolute(), "Remote");
         dict.setStringForKey(this.getName(), "Name");
-        dict.setObjectForKey(this.getParent(), "Parent");
+        if(!this.isRoot()) {
+            dict.setObjectForKey(this.getParent(), "Parent");
+        }
         if(symlink != null) {
             dict.setObjectForKey(symlink, "Symbolic Link");
         }

@@ -98,8 +98,11 @@ public class PathDictionary<T> {
             final T parentObj = dict.objectForKey("Parent");
             if(null == parentObj) {
                 log.error("Missing path for {}", serialized);
+                path = new Path(name, type, attributes);
             }
-            path = new Path(new PathDictionary<>(factory).deserialize(parentObj), name, type, attributes);
+            else {
+                path = new Path(new PathDictionary<>(factory).deserialize(parentObj), name, type, attributes);
+            }
         }
         final T symlinkObj = dict.objectForKey("Symbolic Link");
         if(symlinkObj != null) {

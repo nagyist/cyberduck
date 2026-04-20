@@ -60,11 +60,11 @@ public class PathTest {
 
     @Test
     public void testDictionaryRegion() {
-        Path path = new Path("/path/f", EnumSet.of(Path.Type.file));
-        path.attributes().setRegion("r");
-        final Path deserialized = new PathDictionary<>().deserialize(path.serialize(SerializerFactory.get()));
-        assertEquals(path, deserialized);
-        assertEquals("r", deserialized.attributes().getRegion());
+        Path f = new Path("/path/f", EnumSet.of(Path.Type.file));
+        f.getParent().attributes().setRegion("r");
+        final Path deserialized = new PathDictionary<>().deserialize(f.serialize(SerializerFactory.get()));
+        assertEquals(f, deserialized);
+        assertNull(deserialized.attributes().getRegion());
         assertEquals("r", deserialized.getParent().attributes().getRegion());
     }
 
