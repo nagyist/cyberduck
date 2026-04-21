@@ -97,7 +97,7 @@ public class PathDictionary<T> {
         else {
             final T parentObj = dict.objectForKey("Parent");
             if(null == parentObj) {
-                log.error("Missing path for {}", serialized);
+                // Root
                 path = new Path(name, type, attributes);
             }
             else {
