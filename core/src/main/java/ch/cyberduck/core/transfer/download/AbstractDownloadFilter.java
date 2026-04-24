@@ -52,8 +52,6 @@ import ch.cyberduck.core.transfer.TransferPathFilter;
 import ch.cyberduck.core.transfer.TransferStatus;
 import ch.cyberduck.core.transfer.symlink.SymlinkResolver;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -138,20 +136,6 @@ public abstract class AbstractDownloadFilter implements TransferPathFilter {
             if(file.isFile()) {
                 // Content length
                 status.setLength(attributes.getSize());
-                if(StringUtils.startsWith(attributes.getDisplayname(), "file:")) {
-                    final String filename = StringUtils.removeStart(attributes.getDisplayname(), "file:");
-                    if(!StringUtils.equals(file.getName(), filename)) {
-                        status.setDisplayname(LocalFactory.get(local.getParent(), filename));
-                        int no = 0;
-                        while(status.getDisplayname().local.exists()) {
-                            String proposal = String.format("%s-%d", FilenameUtils.getBaseName(filename), ++no);
-                            if(StringUtils.isNotBlank(Path.getExtension(filename))) {
-                                proposal += String.format(".%s", Path.getExtension(filename));
-                            }
-                            status.setDisplayname(LocalFactory.get(local.getParent(), proposal));
-                        }
-                    }
-                }
             }
         }
         status.setRemote(attributes);
