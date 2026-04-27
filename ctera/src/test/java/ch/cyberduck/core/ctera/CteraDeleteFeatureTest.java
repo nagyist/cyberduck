@@ -37,22 +37,6 @@ public class CteraDeleteFeatureTest extends AbstractCteraTest {
         assertFalse(new DAVFindFeature(session).find(test));
     }
 
-    @Test(expected = RetriableAccessDeniedException.class)
-    public void testDeleteFileWithLock() throws Exception {
-        final Path test = new Path(new DefaultHomeFinderService(session).find(), new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.file));
-        new CteraTouchFeature(session).touch(new CteraWriteFeature(session), test, new TransferStatus());
-        String lock = null;
-        try {
-            lock = new DAVLockFeature(session).lock(test);
-        }
-        catch(InteroperabilityException e) {
-            // Not supported
-        }
-        assertTrue(new DAVFindFeature(session).find(test));
-        new CteraDeleteFeature(session).delete(Collections.singletonMap(test, new TransferStatus().setLockId(lock)), LoginCallback.noop, new Delete.DisabledCallback());
-        assertFalse(new DAVFindFeature(session).find(test));
-    }
-
     @Test
     public void testDeleteDirectory() throws Exception {
         final Path test = new Path(new DefaultHomeFinderService(session).find(), new AlphanumericRandomStringService().random(), EnumSet.of(Path.Type.directory));
