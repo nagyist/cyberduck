@@ -20,6 +20,7 @@ import ch.cyberduck.core.Session;
 import ch.cyberduck.core.cryptomator.AbstractVault;
 import ch.cyberduck.core.cryptomator.ContentWriter;
 import ch.cyberduck.core.exception.BackgroundException;
+import ch.cyberduck.core.exception.NotfoundException;
 import ch.cyberduck.core.features.Directory;
 import ch.cyberduck.core.features.Find;
 import ch.cyberduck.core.features.Write;
@@ -46,7 +47,14 @@ public class CryptoDirectoryFeature<Reply> implements Directory<Reply> {
 
     @Override
     public Path mkdir(final Write<Reply> writer, final Path folder, final TransferStatus status) throws BackgroundException {
-        final DirectoryMetadata dirMetadata = vault.getDirectoryProvider().createDirectoryId(folder);
+        DirectoryMetadata dirMetadata;
+        try {
+            dirMetadata = vault.getDirectoryProvider().getDirectoryId(session, folder);
+        }
+        catch(NotfoundException e) {
+            log.warn("Missing directory ID for folder {}", folder);
+            dirMetadata = vault.getDirectoryProvider().createDirectoryId(folder);
+        }
         // Create metadata file for directory
         final Path directoryMetadataFolder = session._getFeature(Directory.class).mkdir(
                 session._getFeature(Write.class), vault.encrypt(session, folder, true),
@@ -85,6 +93,7 @@ public class CryptoDirectoryFeature<Reply> implements Directory<Reply> {
 
     @Override
     public void preflight(final Path workdir, final String filename) throws BackgroundException {
+        vault.getDirectoryProvider().createDirectoryId(workdir);
         delegate.preflight(vault.encrypt(session, workdir), filename);
     }
 
