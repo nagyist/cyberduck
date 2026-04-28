@@ -67,7 +67,7 @@ public class LoopbackOAuth2AuthorizationCodeProvider extends BrowserOAuth2Author
         });
         try {
             final HttpServer server = HttpServer.create(new InetSocketAddress(
-                    URI.create(redirectUri).getHost(), URI.create(redirectUri).getPort()), 0);
+                    URI.create(redirectUri).getHost(), -1 == URI.create(redirectUri).getPort() ? 0 : URI.create(redirectUri).getPort()), 0);
             final ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("oauth"));
             // Create handler for OAuth callback
             server.createContext(StringUtils.isBlank(URI.create(redirectUri).getRawPath()) ?
