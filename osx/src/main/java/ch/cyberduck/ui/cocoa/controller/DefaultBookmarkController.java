@@ -87,9 +87,9 @@ public class DefaultBookmarkController extends BookmarkController {
     }
 
     @Override
-    public void awakeFromNib() {
-        super.awakeFromNib();
+    public void focus() {
         window.makeFirstResponder(hostField);
+        super.focus();
     }
 
     public void setNicknameField(final NSTextField f) {

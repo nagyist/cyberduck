@@ -427,7 +427,6 @@ public class BrowserController extends WindowController implements NSToolbar.Del
      * Marks the current browser as the first responder
      */
     private void getFocus() {
-        NSView view;
         if(this.getSelectedTabView() == BrowserTab.bookmarks) {
             window.makeFirstResponder(bookmarkTable);
             bookmarkTableDelegate.selectionDidChange(NSNotification.notificationWithName(StringUtils.EMPTY, this.id()));

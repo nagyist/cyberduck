@@ -479,6 +479,11 @@ public class BookmarkController extends SheetController implements CollectionLis
     @Override
     public void awakeFromNib() {
         super.awakeFromNib();
+        this.update();
+    }
+
+    @Override
+    public void focus() {
         if(bookmark.getProtocol().isHostnameConfigurable()) {
             window.makeFirstResponder(hostField);
         }
@@ -487,7 +492,7 @@ public class BookmarkController extends SheetController implements CollectionLis
                 window.makeFirstResponder(usernameField);
             }
         }
-        this.update();
+        super.focus();
     }
 
     @Override
