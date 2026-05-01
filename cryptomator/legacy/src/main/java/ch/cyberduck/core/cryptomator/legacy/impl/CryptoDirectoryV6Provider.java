@@ -131,6 +131,9 @@ public class CryptoDirectoryV6Provider implements CryptoDirectory {
     public byte[] createDirectoryId(final Path directory) {
         lock.writeLock().lock();
         try {
+            if(cache.contains(new SimplePathPredicate(directory))) {
+                return cache.get(new SimplePathPredicate(directory));
+            }
             final byte[] directoryId = new UUIDRandomStringService().random().getBytes(StandardCharsets.US_ASCII);
             cache.put(new SimplePathPredicate(directory), directoryId);
             return directoryId;
