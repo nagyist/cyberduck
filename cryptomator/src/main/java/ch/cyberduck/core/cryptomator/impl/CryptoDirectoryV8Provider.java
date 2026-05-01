@@ -157,6 +157,9 @@ public class CryptoDirectoryV8Provider implements CryptoDirectory {
     public DirectoryMetadata createDirectoryId(final Path directory) {
         lock.writeLock().lock();
         try {
+            if(cache.contains(new SimplePathPredicate(directory))) {
+                return vault.getCryptor().directoryContentCryptor().decryptDirectoryMetadata(cache.get(new SimplePathPredicate(directory)));
+            }
             final DirectoryMetadata metadata = vault.getCryptor().directoryContentCryptor().newDirectoryMetadata();
             final byte[] encrypted = vault.getCryptor().directoryContentCryptor().encryptDirectoryMetadata(metadata);
             cache.put(new SimplePathPredicate(directory), encrypted);
