@@ -290,7 +290,7 @@ public class TransferController extends WindowController implements TransferList
      */
     @Action
     public void searchButtonClicked(final ID sender) {
-        window.makeFirstResponder(this.filterField);
+        window.makeFirstResponder(filterField);
     }
 
     @Action

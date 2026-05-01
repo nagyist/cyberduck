@@ -63,6 +63,12 @@ public abstract class WindowController extends BundleController implements NSWin
     }
 
     @Override
+    public void awakeFromNib() {
+        super.awakeFromNib();
+        this.focus();
+    }
+
+    @Override
     public void invalidate() {
         listeners.clear();
         if(window != null) {
@@ -132,6 +138,13 @@ public abstract class WindowController extends BundleController implements NSWin
         else {
             window.orderFront(null);
         }
+    }
+
+    /**
+     * Make window the key window and select any first responder
+     */
+    public void focus() {
+
     }
 
     /**

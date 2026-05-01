@@ -43,14 +43,14 @@ public class ConnectionController extends BookmarkController {
     }
 
     @Override
-    public void awakeFromNib() {
-        super.awakeFromNib();
+    public void focus() {
         if(options.user) {
             window.makeFirstResponder(usernameField);
         }
         if(options.password && !StringUtils.isBlank(bookmark.getCredentials().getUsername())) {
             window.makeFirstResponder(passwordField);
         }
+        super.focus();
     }
 
     @Override
