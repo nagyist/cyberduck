@@ -93,7 +93,7 @@ public class CryptoDirectoryFeature<Reply> implements Directory<Reply> {
 
     @Override
     public void preflight(final Path workdir, final String filename) throws BackgroundException {
-        vault.getDirectoryProvider().createDirectoryId(workdir);
+        vault.getDirectoryProvider().createDirectoryId(new Path(workdir, filename, EnumSet.of(Path.Type.directory)));
         delegate.preflight(vault.encrypt(session, workdir), filename);
     }
 
