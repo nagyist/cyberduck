@@ -119,8 +119,8 @@ public class CteraAttributesFinderFeatureTest extends AbstractCteraTest {
         assertEquals("false", resource.getCustomProps().get(READPERMISSION.getName()));
         assertEquals("false", resource.getCustomProps().get(DELETEPERMISSION.getName()));
         assertEquals("false", resource.getCustomProps().get(CREATEDIRECTORIESPERMISSION.getName()));
-        assertEquals("bb64b3a4-399e-45d0-95af-43f1ace6e250:105620641", resource.getCustomProps().get(CTERA_GUID));
-        assertEquals("105620644", resource.getCustomProps().get(CTERA_FILEID));
+        assertEquals("05c75d64-bb1e-4be8-8ec3-19370247dfec:913", resource.getCustomProps().get(CTERA_GUID));
+        assertEquals("47836", resource.getCustomProps().get(CTERA_FILEID));
         assertEquals(new Acl(new Acl.CanonicalUser()), new CteraAttributesFinderFeature(session).toAttributes(resource).getAcl());
         // find fails with 403 in backend
         final AccessDeniedException findException = assertThrows(AccessDeniedException.class, () -> new CteraAttributesFinderFeature(session).find(new Path(home, "NoAccess", EnumSet.of(AbstractPath.Type.directory))));
