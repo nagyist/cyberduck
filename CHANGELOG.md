@@ -1,11 +1,19 @@
 # Changelog
-
 [9.5.0](https://github.com/iterate-ch/cyberduck/compare/release-9-4-1...release-9-5-0)
 * [Feature] AWS IAM Identity Center Support (S3) ([#13377](https://trac.cyberduck.io/ticket/13377))
-* [Feature] Connect with credentials from `credential_process` configuration directive in ~/.aws (
-  S3) ([#11664](https://trac.cyberduck.io/ticket/11664))
+* [Feature] Connect with credentials from
+  `credential_process` configuration directive in ~/.aws (S3) ([#11664](https://trac.cyberduck.io/ticket/11664))
+* [Feature] Add preference to include previous versions of files in browser (S3) ([#18020](https://trac.cyberduck.io/ticket/18020))
+* [Feature] Retrieve credentials from instance metadata using IMDSv2 (S3) ([#16104](https://trac.cyberduck.io/ticket/16104))
 * [Bugfix] Error downloading file from unlocked vault (Cryptomator) ([#17935](https://trac.cyberduck.io/ticket/17935))
 * [Bugfix] No trailing delimiter for path style requests with bucket name only ([#17901](https://trac.cyberduck.io/ticket/17901))
+* [Bugfix] Repeating file transfer in vault fails after restart (Cryptomator) ([#17974](https://trac.cyberduck.io/ticket/17974))
+* [Bugfix] Do not write file header to placeholder files for folders (Cryptomator, Mega.nz S4)
+* [Bugfix] Remove /Default symbolic link (Sharepoint) ([#17918](https://trac.cyberduck.io/ticket/17918))
+* [Bugfix] Map all SSL failures to network error and await server response on control connection (FTP) ([#17946](https://trac.cyberduck.io/ticket/17946))
+* [Bugfix] Browser window does not show up in Exposé & Mission Control (macOS) ([#17703](https://trac.cyberduck.io/ticket/17703))
+* [Bugfix] Compare public key blob instead of comment when retrieving key from agent (SFTP)
+* [Bugfix] Support "Include" directive when reading from OpenSSH config (SFTP) ([#10451](https://trac.cyberduck.io/ticket/10451))
 
 [9.4.1](https://github.com/iterate-ch/cyberduck/compare/release-9-4-0...release-9-4-1)
 * [Bugfix] Cleartext uploads to unlocked vault with auto detect disabled in Preferences (
