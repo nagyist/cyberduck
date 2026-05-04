@@ -48,3 +48,5 @@ jobs:
       - name: Publish Test Report
         if: github.event.pull_request.head.repo.fork == false
         uses: scacap/action-surefire-report@v1.10.0
+        with:
+          check_name: Test Report (${{ matrix.os }})
