@@ -2727,8 +2727,7 @@ public class BrowserController extends WindowController implements NSToolbar.Del
         uploadPanel = NSOpenPanel.openPanel();
         uploadPanel.setCanChooseDirectories(true);
         uploadPanel.setCanChooseFiles(pool.getFeature(Touch.class).isSupported(
-                new UploadTargetFinder(workdir).find(this.getSelectedPath()),
-                StringUtils.EMPTY));
+                new UploadTargetFinder(workdir).find(this.getSelectedPath()), Optional.empty()));
         uploadPanel.setCanCreateDirectories(false);
         uploadPanel.setTreatsFilePackagesAsDirectories(true);
         uploadPanel.setAllowsMultipleSelection(true);
