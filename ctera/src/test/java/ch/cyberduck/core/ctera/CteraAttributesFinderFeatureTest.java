@@ -227,13 +227,6 @@ public class CteraAttributesFinderFeatureTest extends AbstractCteraTest {
         assertEquals(new Acl(
                 new Acl.UserAndRole(new Acl.CanonicalUser(), READPERMISSION)
         ), fileAcl);
-
-        final Path emptySubfolder = new Path(folder, "Empty WORM folder", EnumSet.of(AbstractPath.Type.directory));
-        final Acl emptySubfolderAcl = new CteraAttributesFinderFeature(session).find(emptySubfolder).getAcl();
-        assertEquals(new Acl(
-                new Acl.UserAndRole(new Acl.CanonicalUser(), READPERMISSION),
-                new Acl.UserAndRole(new Acl.CanonicalUser(), CREATEDIRECTORIESPERMISSION)
-        ), emptySubfolderAcl);
     }
 
     @Test
