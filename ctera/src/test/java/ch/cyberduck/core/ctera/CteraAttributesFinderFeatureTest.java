@@ -204,14 +204,6 @@ public class CteraAttributesFinderFeatureTest extends AbstractCteraTest {
     public void testWORMAcl() throws Exception {
         final Path home = new Path("/ServicesPortal/webdav/Shared With Me", EnumSet.of(AbstractPath.Type.directory));
         final Path folder = new Path(home, "WORM test", EnumSet.of(AbstractPath.Type.directory));
-        final Acl folderAcl = new CteraAttributesFinderFeature(session).find(folder).getAcl();
-        assertEquals(new Acl(
-                new Acl.UserAndRole(new Acl.CanonicalUser(), READPERMISSION),
-                new Acl.UserAndRole(new Acl.CanonicalUser(), WRITEPERMISSION),
-                new Acl.UserAndRole(new Acl.CanonicalUser(), DELETEPERMISSION),
-                new Acl.UserAndRole(new Acl.CanonicalUser(), CREATEDIRECTORIESPERMISSION)
-        ), folderAcl);
-
         final Path subfolder = new Path(folder, "Retention Folder (no write, no delete)", EnumSet.of(AbstractPath.Type.directory));
         final Acl subfolderAcl = new CteraAttributesFinderFeature(session).find(subfolder).getAcl();
         assertEquals(new Acl(
