@@ -136,7 +136,9 @@ public class CteraAttributesFinderFeatureTest extends AbstractCteraTest {
         final Path home = new Path("/ServicesPortal/webdav/Shared With Me/ACL test", EnumSet.of(AbstractPath.Type.directory));
         final Path folder = new Path(home, "NoDelete", EnumSet.of(AbstractPath.Type.directory));
         final Acl folderAcl = new CteraAttributesFinderFeature(session).find(folder).getAcl();
-        assertEquals(Acl.EMPTY, folderAcl);
+        assertEquals(new Acl(new Acl.UserAndRole(new Acl.CanonicalUser(), READPERMISSION),
+                new Acl.UserAndRole(new Acl.CanonicalUser(), WRITEPERMISSION),
+                new Acl.UserAndRole(new Acl.CanonicalUser(), CREATEDIRECTORIESPERMISSION)), folderAcl);
 
         final Path file = new Path(folder, "RW no delete.txt", EnumSet.of(AbstractPath.Type.file));
         final Acl fileAcl = new CteraAttributesFinderFeature(session).find(file).getAcl();
